@@ -2,7 +2,7 @@ package com.mygdx.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.mygdx.game.CSC361_F18_Crouthamel;
+import com.mygdx.retromario.CSC361_F18_Crouthamel;
 
 public class DesktopLauncher {
 	public static void main (String[] arg) {
