@@ -3,6 +3,7 @@
  * Project: Retro Mario
  * Class: VGP 
  * Professor: Dr.Girard
+ * Description: Assets class
  */
 
 package com.packtpub.mygdx.retromario.game;
