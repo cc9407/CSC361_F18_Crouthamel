@@ -3,6 +3,7 @@
  * Project: Retro Mario
  * Class: VGP 
  * Professor: Dr.Girard
+ * Description: Abstract game screen
  */
 
 package com.packtpub.mygdx.retromario.screens;
