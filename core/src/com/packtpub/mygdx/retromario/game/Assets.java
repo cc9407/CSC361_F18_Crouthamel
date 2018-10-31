@@ -12,6 +12,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
 import com.packtpub.mygdx.retromario.util.Constants;
@@ -24,6 +26,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	//instance variables
 	public static final String TAG = Assets.class.getName(); 
 	public static final Assets instance = new Assets();
+	public AssetMario mario;
+	public AssetRock rock;
+	public AssetLeaf leaf;
 	//asset manager object
 	private AssetManager assetManager;
 	
@@ -50,8 +55,21 @@ public class Assets implements Disposable, AssetErrorListener {
 		assetManager.finishLoading();
 		Gdx.app.debug(TAG, "# of assets loaded: " + assetManager.getAssetNames().size );
 		
+		for(String a : assetManager.getAssetNames()) 
+			Gdx.app.debug(TAG, "asset: "+a);
 		
-	}
+		TextureAtlas atlas = assetManager.get(Constants.TEXTURE_ATLAS_OBJECTS);
+		//enable texture filtering for pixel smoothing
+		for(Texture t : atlas.getTextures()) {
+			t.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+				}
+				//create game resource objects
+				mario = new AssetMario(atlas);
+				rock = new AssetRock(atlas);
+				leaf = new AssetLeaf(atlas);
+				
+			}
+		
 	
 	/*
 	 * (non-Javadoc)
@@ -96,7 +114,7 @@ public class Assets implements Disposable, AssetErrorListener {
 
 	/*
 	 *  This inner class contains a member variable called "head"
-	 * and will display the bunny head
+	 * and will display mario
 	 */
 	public class AssetMario {
 		public final AtlasRegion head;
@@ -105,4 +123,15 @@ public class Assets implements Disposable, AssetErrorListener {
 			head = atlas.findRegion("Mario");
 			}
 		}
+	
+	/*
+	 * inner class to display leaf 
+	 */
+	public class AssetLeaf {
+		public final AtlasRegion base;
+		
+		public AssetLeaf(TextureAtlas atlas) {
+			base = atlas.findRegion("leaf");
+		}
+	}
 }
