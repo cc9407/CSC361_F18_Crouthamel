@@ -8,57 +8,49 @@
 
 package com.packtpub.mygdx.retromario.game;
 
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
-import com.packtpub.mygdx.retromario.game.WorldController;
+import com.packtpub.mygdx.retromario.util.Constants;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class WorldRenderer implements Disposable {
-
-	//instance variables and objects 
+	private OrthographicCamera camera;
 	private SpriteBatch batch;
 	private WorldController worldController;
 	
-	/**
-	 * Initializes the world renderer and creates an
-	 * instance for the world controller.
-	 * @param worldController
-	 */
 	public WorldRenderer(WorldController worldController) {
-		// instance of world controller
-		this.worldController = worldController; 
-		// initialize
-		init(); 
+		this.worldController = worldController;
+		init();
 	}
-	
-	/**
-	 * Initializes the world renderer and its sprite batch,
-	 * cameras, and GUI.
-	 */
 	private void init () {
-		// create a batch of sprites
-		batch = new SpriteBatch(); 
+		batch = new SpriteBatch();
+		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,
+				Constants.VIEWPORT_HEIGHT);
+		camera.position.set(0, 0, 0);
+		camera.update();
 	}
 	
-	/**
-	 * Calls renderWorld to draw the game objects of the loaded level.
-	 */
 	public void render () {
-		renderWorld(batch);
+		renderTestObjects();
 	}
 	
-	/**
-	 * Called by render.
-	 * @param batch sprite batch
-	 */
-	private void renderWorld (SpriteBatch batch) {
+	private void renderTestObjects() {
+		worldController.cameraHelper.applyTo(camera);
+		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		for(Sprite sprite : worldController.testSprites) {
+			sprite.draw(batch);
+		}
 		batch.end();
 	}
 	
-	/**
-	 * Disposes of unused resources that build up in Java
-	 * and C under-layer.
-	 */
+	public void resize (int width, int height) {
+		camera.viewportWidth = (Constants.VIEWPORT_HEIGHT / height) *
+				width;
+		camera.update();
+	}
+	
 	@Override public void dispose () {
 		batch.dispose();
 	}
