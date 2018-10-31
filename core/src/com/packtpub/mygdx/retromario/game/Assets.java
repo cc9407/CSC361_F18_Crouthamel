@@ -29,6 +29,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetMario mario;
 	public AssetRock rock;
 	public AssetLeaf leaf;
+	public AssetGoomba goomba;
+	public AssetKoopa koopa;
+	public AssetLevelDecoration levelDecoration;
 	//asset manager object
 	private AssetManager assetManager;
 	
@@ -67,7 +70,9 @@ public class Assets implements Disposable, AssetErrorListener {
 				mario = new AssetMario(atlas);
 				rock = new AssetRock(atlas);
 				leaf = new AssetLeaf(atlas);
-				
+				goomba = new AssetGoomba(atlas);
+				koopa = new AssetKoopa(atlas);
+				levelDecoration = new AssetLevelDecoration(atlas);
 			}
 		
 	
@@ -132,6 +137,43 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		public AssetLeaf(TextureAtlas atlas) {
 			base = atlas.findRegion("leaf");
+		}
+	}
+	
+	 /*
+	 * inner class to display goomba 
+	 */
+	public class AssetGoomba {
+		public final AtlasRegion enemy1;
+		
+		public AssetGoomba(TextureAtlas atlas) {
+			enemy1 = atlas.findRegion("goomba");
+		}
+	}
+	
+	 /*
+		 * inner class to display koopa
+		 */
+		public class AssetKoopa {
+			public final AtlasRegion enemy2;
+			
+			public AssetKoopa(TextureAtlas atlas) {
+				enemy2 = atlas.findRegion("koopa");
+			}
+		}
+	
+	/*
+	 * asset level decorations 
+	 */
+	public class AssetLevelDecoration{
+		public final AtlasRegion cloud;
+		public final AtlasRegion mountainLeft;
+		public final AtlasRegion mountainRight;
+		
+		public AssetLevelDecoration(TextureAtlas atlas) {
+			cloud = atlas.findRegion("cloud");
+			mountainLeft = atlas.findRegion("mountain_left");
+			mountainRight = atlas.findRegion("mountain_right");
 		}
 	}
 }
