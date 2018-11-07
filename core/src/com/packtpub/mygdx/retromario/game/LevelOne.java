@@ -11,7 +11,7 @@ import com.packtpub.mygdx.retromario.game.objects.Clouds;
 
 public class LevelOne 
 {
-	public static final String TAG = Level.class.getName();
+	public static final String TAG = LevelOne.class.getName();
 	
 		
 	public enum BLOCK_TYPE {
@@ -47,7 +47,7 @@ public class LevelOne
 		public Mountains mountains;
 		
 		// initiates the level through a filename
-		public Level (String filename) {
+		public LevelOne (String filename) {
 			init(filename);
 		}
 		
