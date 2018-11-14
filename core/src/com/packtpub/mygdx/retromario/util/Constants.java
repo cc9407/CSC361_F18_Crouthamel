@@ -30,4 +30,5 @@ public class Constants {
 	
 	//preferences 
 	public static final String PREFERENCES = "settings.prefs";
+	
 }
