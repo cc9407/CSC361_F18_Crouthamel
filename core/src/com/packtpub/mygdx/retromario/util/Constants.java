@@ -27,4 +27,7 @@ public class Constants {
 	
 	// Powerup duration for the feather
 	public static final float ITEM_LEAF_POWERUP_DURATION = 9;
+	
+	//preferences 
+	public static final String PREFERENCES = "settings.prefs";
 }
