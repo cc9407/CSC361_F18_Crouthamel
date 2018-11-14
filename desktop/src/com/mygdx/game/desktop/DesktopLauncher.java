@@ -28,7 +28,7 @@ public static void main (String[] arg) {
 			
 			LwjglApplicationConfiguration cfg = new
 			LwjglApplicationConfiguration();
-			cfg.title = "CanyonBunny";
+			cfg.title = "Mario";
 			cfg.width = 800;
 			cfg.height = 480;
 			new LwjglApplication(new CSC361_F18_Crouthamel(), cfg);
