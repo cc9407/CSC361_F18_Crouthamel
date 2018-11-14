@@ -13,7 +13,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.packtpub.mygdx.retromario.game.Assets;
 
-public abstract class AbstractGameScreen {
+public abstract class AbstractGameScreen implements Screen{
 
 	//game object 
 	protected Game game;
