@@ -171,11 +171,13 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final AtlasRegion cloud;
 		public final AtlasRegion mountainLeft;
 		public final AtlasRegion mountainRight;
+		public final AtlasRegion waterOverlay;
 		
 		public AssetLevelDecoration(TextureAtlas atlas) {
 			cloud = atlas.findRegion("cloud");
 			mountainLeft = atlas.findRegion("mountain_left");
 			mountainRight = atlas.findRegion("mountain_right");
+			waterOverlay = atlas.findRegion("water_overlay");
 		}
 	}
 	

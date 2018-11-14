@@ -8,10 +8,17 @@ import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.game.objects.Mountains;
 import com.packtpub.mygdx.retromario.game.objects.Clouds;
+import com.packtpub.mygdx.retromario.game.objects.Leaf;
+import com.packtpub.mygdx.retromario.game.objects.Mario;
+import com.packtpub.mygdx.retromario.game.objects.WaterOverlay;
 
 public class LevelOne 
 {
 	public static final String TAG = LevelOne.class.getName();
+	
+	// object member variables
+		public Mario mario;
+		public Array<Leaf> leaves;
 	
 		
 	public enum BLOCK_TYPE {
@@ -45,15 +52,22 @@ public class LevelOne
 		// decoration
 		public Clouds clouds;
 		public Mountains mountains;
+		public WaterOverlay waterOverlay;
 		
 		// initiates the level through a filename
 		public LevelOne (String filename) {
 			init(filename);
+			mario.position.y = 1.0f;
 		}
 		
 		private void init (String filename) {
 			// objects
 			rocks = new Array<Rock>();
+			//player
+			mario = null;
+			//leaves array
+			leaves = new Array<Leaf>();
+			
 			
 			// load image file that represents the level data
 			Pixmap pixmap = new Pixmap(Gdx.files.internal(filename));
@@ -92,7 +106,7 @@ public class LevelOne
 					else if
 						(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 					}
-					// feather
+					// leaf
 					else if
 						(BLOCK_TYPE.ITEM_LEAF.sameColor(currentPixel)) {
 					}
@@ -118,6 +132,8 @@ public class LevelOne
 			clouds.position.set(0, 2);
 			mountains = new Mountains(pixmap.getWidth());
 			mountains.position.set(-1, -1);
+			waterOverlay = new WaterOverlay(pixmap.getWidth());
+			waterOverlay.position.set(0, -3.75f);
 			
 			// free memory
 			pixmap.dispose();
@@ -135,5 +151,37 @@ public class LevelOne
 			
 			// Draw Clouds
 			clouds.render(batch);
+			
+			// Draw Water Overlay
+			waterOverlay.render(batch);
+			
+			// Draw Player Character
+			mario.render(batch);
+			
+			// Draw Feathers
+			for (Leaf leaf : leaves)
+				leaf.render(batch);
+		}
+		
+		public void update (float deltaTime) {
+			// update the bunny head
+			// aka: where am I, have I touched anything,
+			// what am I doing
+			mario.update(deltaTime);
+			
+			// update the rocks
+			// aka: have I been touched, am I moving
+			for(Rock rock : rocks)
+				rock.update(deltaTime);
+			
+		
+			
+			// update the feathers
+			// aka: have they been picked up yet
+			for(Leaf leaf : leaves)
+				leaf.update(deltaTime);
+			
+			// keeps the clouds moving
+			clouds.update(deltaTime);
 		}
 }
