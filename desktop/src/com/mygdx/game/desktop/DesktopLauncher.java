@@ -9,8 +9,8 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 public class DesktopLauncher {
 	
 	//private static boolean for atlas and outline
-	private static boolean rebuildAtlas = true;
-	private static boolean drawDebugOutline = true;
+	private static boolean rebuildAtlas = false;
+	private static boolean drawDebugOutline = false;
 	
 public static void main (String[] arg) {
 		
@@ -24,7 +24,7 @@ public static void main (String[] arg) {
 			settings.debug = drawDebugOutline;
 
 			TexturePacker.process(settings, "assets-raw/images", "../core/assets/images","retromario.atlas");
-			TexturePacker.process(settings, "assets-raw/images", "../core/assets/images-ui","retromario-ui.atlas");
+			//TexturePacker.process(settings, "assets-raw/images", "../core/assets/images-ui","retromario-ui.atlas");
 			}
 			
 			LwjglApplicationConfiguration cfg = new
