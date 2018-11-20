@@ -216,7 +216,7 @@ public class WorldController extends InputAdapter {
 		if (isGameOver()) {
 			timeLeftGameOverDelay -= deltaTime;
 			if (timeLeftGameOverDelay < 0)
-				backToMenu();
+				System.out.println("No menu yet");
 		} else {
 			handleInputGame(deltaTime);
 		}
@@ -310,7 +310,7 @@ public class WorldController extends InputAdapter {
 		}
 		// Back to Menu
 		else if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
-			backToMenu();
+			//backToMenu();
 		}
 		return false;
 	}
@@ -345,9 +345,9 @@ public class WorldController extends InputAdapter {
 
 	/**
 	 * save a reference to the game instance
-	 */
+	 *
 	private void backToMenu() {
 		// switch to menu screen
 		game.setScreen(new MenuScreen(game));
-	}
+	}*/
 }
