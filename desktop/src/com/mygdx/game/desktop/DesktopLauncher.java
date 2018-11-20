@@ -10,9 +10,10 @@ public class DesktopLauncher {
 	
 	//private static boolean for atlas and outline
 	private static boolean rebuildAtlas = false;
-	private static boolean drawDebugOutline = true;
+	private static boolean drawDebugOutline = false;
 	
 public static void main (String[] arg) {
+		
 		
 		
 		if (rebuildAtlas) {
@@ -22,13 +23,13 @@ public static void main (String[] arg) {
 			settings.duplicatePadding = false;
 			settings.debug = drawDebugOutline;
 
-			TexturePacker.process(settings, "assets/images", "../core/assets/images","mario.atlas");
-			
+			TexturePacker.process(settings, "assets-raw/images", "../core/assets/images","retromario.atlas");
+			//TexturePacker.process(settings, "assets-raw/images", "../core/assets/images-ui","retromario-ui.atlas");
 			}
 			
 			LwjglApplicationConfiguration cfg = new
 			LwjglApplicationConfiguration();
-			cfg.title = "CanyonBunny";
+			cfg.title = "Mario";
 			cfg.width = 800;
 			cfg.height = 480;
 			new LwjglApplication(new CSC361_F18_Crouthamel(), cfg);

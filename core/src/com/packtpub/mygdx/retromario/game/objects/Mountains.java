@@ -3,6 +3,7 @@ package com.packtpub.mygdx.retromario.game.objects;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.packtpub.mygdx.retromario.game.Assets;
 
 
@@ -76,4 +77,9 @@ public class Mountains extends AbstractGameObject {
 			// distant mountains (light gray)
 			drawMountain(batch, 0.0f, 0.0f, 0.9f);
 		}
+		
+		//update the scroll position
+		public void updateScrollPosition (Vector2 camPosition) {
+			position.set(camPosition.x, position.y);
+			}
 }
