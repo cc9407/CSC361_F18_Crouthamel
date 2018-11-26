@@ -1,47 +1,47 @@
 
 retromario-ui.png
-size: 512,512
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 background
   rotate: false
-  xy: 2, 154
-  size: 284, 177
-  orig: 284, 177
+  xy: 2, 457
+  size: 858, 481
+  orig: 858, 481
   offset: 0, 0
   index: -1
 logo
   rotate: false
-  xy: 2, 333
-  size: 328, 153
-  orig: 328, 153
+  xy: 2, 306
+  size: 339, 149
+  orig: 339, 149
   offset: 0, 0
   index: -1
 options-dn
   rotate: false
-  xy: 332, 336
+  xy: 862, 788
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 options-up
   rotate: false
-  xy: 2, 2
+  xy: 2, 154
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 play-dn
   rotate: false
-  xy: 154, 2
+  xy: 862, 636
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 play-up
   rotate: false
-  xy: 288, 181
+  xy: 2, 2
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
