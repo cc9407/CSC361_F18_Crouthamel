@@ -31,4 +31,16 @@ public class Constants {
 	//preferences 
 	public static final String PREFERENCES = "settings.prefs";
 	
+	// Location of the ui atlas
+	public static final String TEXTURE_MARIO_UI = "images-ui/retromario-ui.atlas";
+		
+	// Location of the mario ui json
+	public static final String SKIN_RETROMARIO_UI =  "images/retromario-ui.json";
+	
+	// Location of the uiskin atlas
+	public static final String TEXTURE_ATLAS_LIBGDX_UI = "images/uiskin.atlas";
+	
+	//location of uiskin json
+	public static final String SKIN_LIBGDX_UI = "images/uiskin.json";
+	
 }

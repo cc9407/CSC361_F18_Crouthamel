@@ -3,8 +3,8 @@ package com.packtpub.mygdx.retromario.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -32,13 +32,13 @@ public class MenuScreen extends AbstractGameScreen
 
 	 private final String TAG = MenuScreen.class.getName();
 	 private Stage stage;
-	 private Skin skinCanyonBunny;
+	 private Skin skinRetroMario;
 	 //menu
 	 private Image imgBackground;
 	 private Image imgLogo;
 	 private Image imgInfo;
 	 private Image imgCoins;
-	 private Image imgBunny;
+	 private Image imgMario;
 	 private Button btnMenuPlay;
 	 private Button btnMenuOptions;
 	 //options
@@ -121,9 +121,14 @@ public class MenuScreen extends AbstractGameScreen
 	  */
 	 private void rebuildStage(){
 		
+		skinRetroMario = new Skin(Gdx.files.internal(Constants.SKIN_RETROMARIO_UI), new TextureAtlas(Constants.TEXTURE_MARIO_UI));
+		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+		 
+		 
+		 
 		 //build all layers
 		 Table layerBackground = buildBackgroundLayer();
-		 Table layerObjects = buildObjectsLayer();
+		// Table layerObjects = buildObjectsLayer();
 		 Table layerLogos = buildLogosLayer();
 		 Table layerControls = buildControlsLayer();
 		 Table layerOptionsWindow = buildOptionsWindowLayer();
@@ -134,7 +139,7 @@ public class MenuScreen extends AbstractGameScreen
 		 stage.addActor(stack);
 		 stack.setSize(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
 		 stack.add(layerBackground);
-		 stack.add(layerObjects);
+		 //stack.add(layerObjects);
 		 stack.add(layerLogos);
 		 stack.add(layerControls);
 		 stage.addActor(layerOptionsWindow);
@@ -169,8 +174,7 @@ public class MenuScreen extends AbstractGameScreen
 	  * libGdx's input processor
 	  */
 	 @Override public void show(){
-		 stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH,
-				 Constants.VIEWPORT_GUI_HEIGHT));
+		 stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT));
 		 Gdx.input.setInputProcessor(stage);
 		 rebuildStage();
 	 }
@@ -179,7 +183,7 @@ public class MenuScreen extends AbstractGameScreen
 	  */
 	 @Override public void hide(){
 		 stage.dispose();
-		 skinCanyonBunny.dispose();
+		 skinRetroMario.dispose();
 	 }
 	 @Override public void pause(){}
 	 
@@ -229,8 +233,7 @@ public class MenuScreen extends AbstractGameScreen
 		 selCharSkin.addListener(new ChangeListener() {
 		 @Override
 		 public void changed(ChangeEvent event, Actor actor) {
-		 onCharSkinSelected(((SelectBox<CharacterSkin>)
-		 actor).getSelectedIndex());
+		 onCharSkinSelected(((SelectBox<CharacterSkin>)actor).getSelectedIndex());
 		 }
 		 });
 		 tbl.add(selCharSkin).width(120).padRight(20);
@@ -247,7 +250,7 @@ public class MenuScreen extends AbstractGameScreen
 		private Table buildBackgroundLayer(){
 			Table layer = new Table();
 			// + Background
-			imgBackground = new Image(skinCanyonBunny, "background");
+			imgBackground = new Image(skinRetroMario, "background");
 			layer.add(imgBackground);
 			return layer;
 		}
@@ -255,17 +258,17 @@ public class MenuScreen extends AbstractGameScreen
 		/**
 		 * @return table of controls for 
 		 * building objects
-		 */
+		 *
 		public Table buildObjectsLayer(){
 			Table layer = new Table();
 			//+Coins
-			imgCoins = new Image(skinCanyonBunny, "coins");
-			layer.addActor(imgCoins);
-			imgCoins.setPosition(135, 80);
+			//imgCoins = new Image(skinRetroMario, "coins");
+			//layer.addActor(imgCoins);
+			//imgCoins.setPosition(135, 80);
 			//+Bunny
-			imgBunny = new Image(skinCanyonBunny, "bunny");
-			layer.addActor(imgBunny);
-			imgBunny.setPosition(355, 40);
+			imgMario = new Image(skinRetroMario, "mario");
+			layer.addActor(imgMario);
+			imgMario.setPosition(355, 40);
 			return layer;
 		}
 		/**
@@ -373,7 +376,7 @@ public class MenuScreen extends AbstractGameScreen
 			Table layer = new Table();
 			layer.right().bottom();
 			// + Play Button
-			btnMenuPlay = new Button(skinCanyonBunny, "play");
+			btnMenuPlay = new Button(skinRetroMario, "play");
 			layer.add(btnMenuPlay);
 			btnMenuPlay.addListener(new ChangeListener() {
 				@Override
@@ -383,7 +386,7 @@ public class MenuScreen extends AbstractGameScreen
 			});
 			layer.row();
 			// + Options Button
-			btnMenuOptions = new Button(skinCanyonBunny, "options");
+			btnMenuOptions = new Button(skinRetroMario, "options");
 			layer.add(btnMenuOptions);
 			btnMenuOptions.addListener(new ChangeListener() {
 				@Override
@@ -404,13 +407,13 @@ public class MenuScreen extends AbstractGameScreen
 			Table layer = new Table();
 			layer.left().top();
 			// + Game Logo
-			imgLogo = new Image(skinCanyonBunny, "logo");
+			imgLogo = new Image(skinRetroMario, "logo");
 			layer.add(imgLogo);
 			layer.row().expandY();
 			// + Info Logos
-			imgInfo = new Image(skinCanyonBunny, "info");
-			layer.add(imgInfo).bottom();
-			if (debugEnabled) layer.debug();
+			//imgInfo = new Image(skinRetroMario, "info");
+			//layer.add(imgInfo).bottom();
+			//if (debugEnabled) layer.debug();
 			return layer;
 		}
 		
