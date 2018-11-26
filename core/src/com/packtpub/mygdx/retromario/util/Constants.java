@@ -31,4 +31,10 @@ public class Constants {
 	//preferences 
 	public static final String PREFERENCES = "settings.prefs";
 	
+	// Location of the ui atlas
+	public static final String TEXTURE_ATLAS_UI = "images/retromario-ui.atlas";
+		
+	// Location of the uiskin atlas
+	//public static final String TEXTURE_ATLAS_LIBGDX_UI = "images/uiskin.atlas";
+	
 }
