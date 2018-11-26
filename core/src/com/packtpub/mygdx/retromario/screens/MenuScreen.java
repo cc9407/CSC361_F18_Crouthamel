@@ -244,7 +244,7 @@ public class MenuScreen extends AbstractGameScreen
 		private Table buildBackgroundLayer(){
 			Table layer = new Table();
 			// + Background
-			imgBackground = new Image(skinRetroMario, "background.png");
+			imgBackground = new Image(skinRetroMario, "background");
 			layer.add(imgBackground);
 			return layer;
 		}
