@@ -122,13 +122,13 @@ public class MenuScreen extends AbstractGameScreen
 	 private void rebuildStage(){
 		
 		skinRetroMario = new Skin(Gdx.files.internal(Constants.SKIN_RETROMARIO_UI), new TextureAtlas(Constants.TEXTURE_MARIO_UI));
-		skinLibgdx = new Skin(Gdx.files.internal(Constants.TEXTURE_MARIO_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
+		skinLibgdx = new Skin(Gdx.files.internal(Constants.SKIN_LIBGDX_UI), new TextureAtlas(Constants.TEXTURE_ATLAS_LIBGDX_UI));
 		 
 		 
 		 
 		 //build all layers
 		 Table layerBackground = buildBackgroundLayer();
-		 Table layerObjects = buildObjectsLayer();
+		// Table layerObjects = buildObjectsLayer();
 		 Table layerLogos = buildLogosLayer();
 		 Table layerControls = buildControlsLayer();
 		 Table layerOptionsWindow = buildOptionsWindowLayer();
@@ -139,7 +139,7 @@ public class MenuScreen extends AbstractGameScreen
 		 stage.addActor(stack);
 		 stack.setSize(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT);
 		 stack.add(layerBackground);
-		 stack.add(layerObjects);
+		 //stack.add(layerObjects);
 		 stack.add(layerLogos);
 		 stack.add(layerControls);
 		 stage.addActor(layerOptionsWindow);
@@ -258,13 +258,13 @@ public class MenuScreen extends AbstractGameScreen
 		/**
 		 * @return table of controls for 
 		 * building objects
-		 */
+		 *
 		public Table buildObjectsLayer(){
 			Table layer = new Table();
 			//+Coins
-			imgCoins = new Image(skinRetroMario, "coins");
-			layer.addActor(imgCoins);
-			imgCoins.setPosition(135, 80);
+			//imgCoins = new Image(skinRetroMario, "coins");
+			//layer.addActor(imgCoins);
+			//imgCoins.setPosition(135, 80);
 			//+Bunny
 			imgMario = new Image(skinRetroMario, "mario");
 			layer.addActor(imgMario);
@@ -411,9 +411,9 @@ public class MenuScreen extends AbstractGameScreen
 			layer.add(imgLogo);
 			layer.row().expandY();
 			// + Info Logos
-			imgInfo = new Image(skinRetroMario, "info");
-			layer.add(imgInfo).bottom();
-			if (debugEnabled) layer.debug();
+			//imgInfo = new Image(skinRetroMario, "info");
+			//layer.add(imgInfo).bottom();
+			//if (debugEnabled) layer.debug();
 			return layer;
 		}
 		
