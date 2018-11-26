@@ -168,8 +168,7 @@ public class MenuScreen extends AbstractGameScreen
 	  * libGdx's input processor
 	  */
 	 @Override public void show(){
-		 stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH,
-				 Constants.VIEWPORT_GUI_HEIGHT));
+		 stage = new Stage(new StretchViewport(Constants.VIEWPORT_GUI_WIDTH,Constants.VIEWPORT_GUI_HEIGHT));
 		 Gdx.input.setInputProcessor(stage);
 		 rebuildStage();
 	 }
@@ -245,7 +244,7 @@ public class MenuScreen extends AbstractGameScreen
 		private Table buildBackgroundLayer(){
 			Table layer = new Table();
 			// + Background
-			imgBackground = new Image(skinRetroMario, "background");
+			imgBackground = new Image(skinRetroMario, "background.png");
 			layer.add(imgBackground);
 			return layer;
 		}

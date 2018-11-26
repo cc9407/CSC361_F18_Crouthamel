@@ -1,82 +1,48 @@
 
 retromario-ui.png
-size: 1024,1024
+size: 512,512
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-leaf
+background
+  rotate: false
+  xy: 2, 154
+  size: 284, 177
+  orig: 284, 177
+  offset: 0, 0
+  index: -1
+logo
+  rotate: false
+  xy: 2, 333
+  size: 328, 153
+  orig: 328, 153
+  offset: 0, 0
+  index: -1
+options-dn
+  rotate: false
+  xy: 332, 336
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+options-up
   rotate: false
   xy: 2, 2
-  size: 900, 900
-  orig: 900, 900
+  size: 150, 150
+  orig: 150, 150
   offset: 0, 0
   index: -1
-rock_edge
+play-dn
   rotate: false
-  xy: 904, 188
-  size: 63, 356
-  orig: 63, 356
+  xy: 154, 2
+  size: 150, 150
+  orig: 150, 150
   offset: 0, 0
   index: -1
-rock_middle
+play-up
   rotate: false
-  xy: 904, 546
-  size: 86, 356
-  orig: 86, 356
-  offset: 0, 0
-  index: -1
-
-retromario-ui2.png
-size: 1024,1024
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-Retro-Mario-icon
-  rotate: false
-  xy: 2, 260
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-badlogic
-  rotate: false
-  xy: 2, 2
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-cloud
-  rotate: false
-  xy: 260, 315
-  size: 251, 201
-  orig: 251, 201
-  offset: 0, 0
-  index: -1
-goomba
-  rotate: false
-  xy: 260, 88
-  size: 225, 225
-  orig: 225, 225
-  offset: 0, 0
-  index: -1
-koopa
-  rotate: false
-  xy: 513, 291
-  size: 225, 225
-  orig: 225, 225
-  offset: 0, 0
-  index: -1
-mountain_left
-  rotate: false
-  xy: 2, 745
-  size: 1000, 225
-  orig: 1000, 225
-  offset: 0, 0
-  index: -1
-mountain_right
-  rotate: false
-  xy: 2, 518
-  size: 1000, 225
-  orig: 1000, 225
+  xy: 288, 181
+  size: 150, 150
+  orig: 150, 150
   offset: 0, 0
   index: -1
