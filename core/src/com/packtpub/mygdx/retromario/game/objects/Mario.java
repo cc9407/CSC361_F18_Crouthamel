@@ -1,10 +1,11 @@
 package com.packtpub.mygdx.retromario.game.objects;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.packtpub.mygdx.retromario.game.Assets;
+import com.packtpub.mygdx.retromario.util.CharacterSkin;
 import com.packtpub.mygdx.retromario.util.Constants;
+import com.packtpub.mygdx.retromario.util.GamePreferences;
 
 public class Mario extends AbstractGameObject
 {
@@ -175,6 +176,9 @@ public class Mario extends AbstractGameObject
 	@Override
 	public void render (SpriteBatch batch) {
 		TextureRegion reg = null;
+		// Apply Skin Color
+		batch.setColor(CharacterSkin.values()[GamePreferences.instance.charSkin].getColor());
+		
 		// Set special color when game object has a leaf power-up
 		if (hasLeafPowerup) {
 			batch.setColor(1.0f, 0.8f, 0.0f, 1.0f);

@@ -13,42 +13,42 @@ anim_gold_coin
   index: 1
 anim_gold_coin
   rotate: false
-  xy: 904, 246
+  xy: 2, 2
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 2
 anim_gold_coin
   rotate: false
-  xy: 2, 2
+  xy: 60, 60
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 3
 anim_gold_coin
   rotate: false
-  xy: 60, 60
+  xy: 60, 2
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 4
 anim_gold_coin
   rotate: false
-  xy: 904, 188
+  xy: 118, 60
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 5
 anim_gold_coin
   rotate: false
-  xy: 60, 2
+  xy: 118, 2
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 6
 gold_coin
   rotate: false
-  xy: 118, 60
+  xy: 176, 60
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
@@ -72,6 +72,13 @@ rock_middle
   xy: 904, 662
   size: 86, 356
   orig: 86, 356
+  offset: 0, 0
+  index: -1
+water_overlay
+  rotate: false
+  xy: 904, 142
+  size: 32, 160
+  orig: 32, 160
   offset: 0, 0
   index: -1
 

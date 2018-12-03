@@ -56,6 +56,7 @@ public class LevelOne
 		public Mountains mountains;
 		public WaterOverlay waterOverlay;
 		
+		
 		// initiates the level through a filename
 		public LevelOne (String filename) {
 			init(filename);
@@ -63,12 +64,15 @@ public class LevelOne
 		}
 		
 		private void init (String filename) {
-			// objects
+			// rocks
 			rocks = new Array<Rock>();
 			//player
 			mario = null;
 			//leaves array
 			leaves = new Array<Leaf>();
+			//coins
+			goldcoins = new Array<GoldCoin>();
+			
 			
 			
 			// load image file that represents the level data
@@ -165,6 +169,10 @@ public class LevelOne
 			for (Rock rock : rocks)
 				rock.render(batch);
 			
+			// Draw Gold Coins
+			for (GoldCoin goldCoin : goldcoins)
+				goldCoin.render(batch);
+			
 			// Draw Clouds
 			clouds.render(batch);
 			
@@ -190,7 +198,10 @@ public class LevelOne
 			for(Rock rock : rocks)
 				rock.update(deltaTime);
 			
-		
+			// update the gold coins
+			// aka: have they been picked up yet
+			for(GoldCoin goldCoin : goldcoins)
+				goldCoin.update(deltaTime);
 			
 			// update the feathers
 			// aka: have they been picked up yet
