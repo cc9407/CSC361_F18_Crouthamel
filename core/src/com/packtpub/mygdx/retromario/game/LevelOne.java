@@ -8,6 +8,7 @@ import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.game.objects.Mountains;
 import com.packtpub.mygdx.retromario.game.objects.Clouds;
+import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
 import com.packtpub.mygdx.retromario.game.objects.Mario;
 import com.packtpub.mygdx.retromario.game.objects.WaterOverlay;
@@ -19,6 +20,7 @@ public class LevelOne
 	// object member variables
 		public Mario mario;
 		public Array<Leaf> leaves;
+		public Array<GoldCoin> goldcoins;
 	
 		
 	public enum BLOCK_TYPE {
@@ -105,14 +107,28 @@ public class LevelOne
 					// player spawn point
 					else if
 						(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
+						obj = new Mario();
+						offsetHeight = -3.0f;
+						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+						mario = (Mario)obj;
 					}
 					// leaf
 					else if
 						(BLOCK_TYPE.ITEM_LEAF.sameColor(currentPixel)) {
+							obj = new Leaf();
+							offsetHeight = -1.5f;
+							obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+							// set the leaf then add it to the leaf array
+							leaves.add((Leaf)obj);
 					}
 					// gold coin
 					else if
 						(BLOCK_TYPE.ITEM_GOLD_COIN.sameColor(currentPixel)) {
+						obj = new GoldCoin();
+						offsetHeight = -1.5f;
+						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+						// set the gold coin then add it to the gold coins array
+						goldcoins.add((GoldCoin)obj);
 					}
 					// unknown object
 					else {

@@ -4,23 +4,72 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-leaf
+anim_gold_coin
+  rotate: false
+  xy: 2, 60
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 1
+anim_gold_coin
+  rotate: false
+  xy: 904, 246
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 2
+anim_gold_coin
   rotate: false
   xy: 2, 2
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 3
+anim_gold_coin
+  rotate: false
+  xy: 60, 60
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 4
+anim_gold_coin
+  rotate: false
+  xy: 904, 188
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 5
+anim_gold_coin
+  rotate: false
+  xy: 60, 2
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: 6
+gold_coin
+  rotate: false
+  xy: 118, 60
+  size: 56, 56
+  orig: 56, 56
+  offset: 0, 0
+  index: -1
+leaf
+  rotate: false
+  xy: 2, 118
   size: 900, 900
   orig: 900, 900
   offset: 0, 0
   index: -1
 rock_edge
   rotate: false
-  xy: 904, 188
+  xy: 904, 304
   size: 63, 356
   orig: 63, 356
   offset: 0, 0
   index: -1
 rock_middle
   rotate: false
-  xy: 904, 546
+  xy: 904, 662
   size: 86, 356
   orig: 86, 356
   offset: 0, 0

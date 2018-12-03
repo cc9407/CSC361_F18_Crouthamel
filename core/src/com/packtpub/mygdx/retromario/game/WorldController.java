@@ -25,6 +25,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
 import com.packtpub.mygdx.retromario.game.objects.Mario;
 import com.packtpub.mygdx.retromario.game.objects.Mario.JUMP_STATE;
@@ -127,12 +128,12 @@ public class WorldController extends InputAdapter implements Disposable{
 	};
 
 	/**
-	 * Bunny collides with a gold coin. Increase score.
+	 * mario collides with a gold coin. Increase score.
 	 * Set that gold coin's boolean value to true so
 	 * it knows it's been collected.
 	 * @param goldcoin
-	 *
-	private void onCollisionBunnyWithGoldCoin(GoldCoin goldcoin) {
+	 */
+	private void onCollisionMarioWithGoldCoin(GoldCoin goldcoin) {
 		goldcoin.collected = true;
 		score += goldcoin.getScore();
 		Gdx.app.log(TAG, "Gold coin collected");
@@ -168,16 +169,16 @@ public class WorldController extends InputAdapter implements Disposable{
 			// IMPORTANT: must do all collisions for valid
 			// edge testing on rocks
 		}
-		/* Test collision: BunnyHead <-> Gold Coins
+		// Test collision: BunnyHead <-> Gold Coins
 		for (GoldCoin goldcoin : level.goldcoins) {
 			if (goldcoin.collected)
 				continue;
 			r2.set(goldcoin.position.x, goldcoin.position.y, goldcoin.bounds.width, goldcoin.bounds.height);
 			if (!r1.overlaps(r2))
 				continue;
-			onCollisionBunnyWithGoldCoin(goldcoin);
+			onCollisionMarioWithGoldCoin(goldcoin);
 			break;
-		}*/
+		}
 		// test collsion: Bunny Head <-> Feathers
 		for (Leaf leaf  : level.leaves) {
 			if (leaf.collected)
@@ -198,6 +199,7 @@ public class WorldController extends InputAdapter implements Disposable{
 		scoreVisual = score;
 		level = new LevelOne(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.mario);
+		initPhysics();
 	}
 
 	/**
@@ -347,7 +349,7 @@ public class WorldController extends InputAdapter implements Disposable{
 		}
 		// Back to Menu
 		else if (keycode == Keys.ESCAPE || keycode == Keys.BACK) {
-			//backToMenu();
+			backToMenu();
 		}
 		return false;
 	}
@@ -382,11 +384,11 @@ public class WorldController extends InputAdapter implements Disposable{
 
 	/**
 	 * save a reference to the game instance
-	 *
+	 */
 	private void backToMenu() {
 		// switch to menu screen
 		game.setScreen(new MenuScreen(game));
-	}*/
+	}
 	
 	/**
 	 * Overridden dispose method

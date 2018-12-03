@@ -11,8 +11,10 @@ package com.packtpub.mygdx.retromario.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Disposable;
 import com.packtpub.mygdx.retromario.util.Constants;
+import com.packtpub.mygdx.retromario.util.GamePreferences;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class WorldRenderer implements Disposable {
@@ -90,17 +92,20 @@ public class WorldRenderer implements Disposable {
 		batch.begin();
 		// draw collected gold coins icon + text
 		// (anchored to top left edge)
-		//renderGuiScore(batch);
+		renderGuiScore(batch);
 		// draw extra lives icon + text
 		// (anchored to top right edge)
+		renderGuiLeafPowerup(batch);
 		renderGuiExtraLive(batch);
 		// draw FPS text
 		// (anchored to bottom right edge)
+		if (GamePreferences.instance.showFpsCounter)
 		renderGuiFpsCounter(batch);
+		renderGuiGameOverMessage(batch);
 		batch.end();
 	}
 	
-	/* renders the GUI elements, specifically the overlaying score (with font)
+	// renders the GUI elements, specifically the overlaying score (with font)
 	private void renderGuiScore (SpriteBatch batch) {
 		float x = -15;
 		float y = -15;
@@ -110,7 +115,7 @@ public class WorldRenderer implements Disposable {
 		// draws the score in the stored font
 		Assets.instance.fonts.defaultBig.draw(batch,
 				"" + worldController.score, x + 75, y + 37);
-	}*/
+	}
 	
 	// renders the GUI's extra life elements, specifically the three
 	// bunny heads to mark the amount of lives the player has
@@ -156,6 +161,63 @@ public class WorldRenderer implements Disposable {
 		// draw the FPS display
 		fpsFont.draw(batch, "FPS: " + fps, x, y);
 		fpsFont.setColor(1, 1, 1, 1); // white
+	}
+	
+	/**
+	 * Renders the game over message.
+	 * @param batch sprite batch
+	 */
+	private void renderGuiGameOverMessage (SpriteBatch batch) {
+		// cuts the camera GUI's dimensions in half to
+		// calculate the center of the camera's viewport
+		float x = cameraGUI.viewportWidth / 2;
+		float y = cameraGUI.viewportHeight / 2;
+		
+		// checks if there is a game over
+		if (worldController.isGameOver()) {
+			// grabs the game over message font and sets its color
+			BitmapFont fontGameOver = Assets.instance.fonts.defaultBig;
+			fontGameOver.setColor(1, 0.75f, 0.25f, 1);
+			
+			// draws the message
+			// HAlignment.CENTER: means to draw the font horizontally centered
+			// to the given position
+			fontGameOver.draw(batch, "GAME OVER", x, y, 1,
+					Align.center, false);
+			fontGameOver.setColor(1, 1, 1, 1);
+		}
+	}
+	
+	/**
+	 * Checks whether there is still time left for the feather
+	 * power-up effect to end. The icon is drawn in the top-left
+	 * corner under the gold coin icon. The small number next to it
+	 * displays the rounded time still left until the effect vanishes.
+	 * It'll fade back and forth when there's less than four seconds left.
+	 * @param batch sprite batch
+	 */
+	private void renderGuiLeafPowerup (SpriteBatch batch) {
+		// where to place the feather power-up display image
+		float x = -15;
+		float y = 30;
+		// checks how much time is left for the power-up
+		float timeLeftFeatherPowerup = 
+				worldController.level.mario.timeLeftLeafPowerup;
+		if (timeLeftFeatherPowerup > 0) {
+			// Start icon fade in/out if the left power-up time
+			// is less than 4 seconds. The fade interval is set
+			// to 5 changes per second.
+			if (timeLeftFeatherPowerup < 4) {
+				if (((int)(timeLeftFeatherPowerup * 5) % 2) != 0) {
+					batch.setColor(1, 1, 1, 0.5f);;
+				}
+			}
+			batch.draw(Assets.instance.leaf.base,
+					x, y, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+			batch.setColor(1, 1, 1, 1);
+			Assets.instance.fonts.defaultSmall.draw(batch,
+					"" + (int)timeLeftFeatherPowerup, x + 60, y + 70);
+		}
 	}
 	
 	/*
