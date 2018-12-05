@@ -21,10 +21,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import com.packtpub.mygdx.retromario.game.objects.Goal;
 import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
 import com.packtpub.mygdx.retromario.game.objects.Mario;
@@ -35,7 +40,7 @@ import com.packtpub.mygdx.retromario.util.CameraHelper;
 import com.packtpub.mygdx.retromario.util.Constants;
 
 
-public class WorldController extends InputAdapter implements Disposable{
+public class WorldController extends InputAdapter implements Disposable, ContactListener{
 
 	private static final String TAG = WorldController.class.getName();
 	public LevelOne level;
@@ -98,124 +103,6 @@ public class WorldController extends InputAdapter implements Disposable{
 	}
 	
 	/**
-	 * Collision based methods
-	 * @param rock the rock object
-	 */
-	private void onCollisionMarioWithRock(Rock rock) {
-		Mario mario = level.mario;
-		float heightDifference = Math.abs(mario.position.y - (rock.position.y + rock.bounds.height));
-		if (heightDifference > 0.25f) {
-			boolean hitRightEdge = mario.position.x > (rock.position.x + rock.bounds.width / 2.0f);
-			if (hitRightEdge) {
-				mario.position.x = rock.position.x + rock.bounds.width;
-			} else {
-				mario.position.x = rock.position.x - mario.bounds.width;
-			}
-			return;
-		}
-
-		switch (mario.jumpState) {
-		case GROUNDED:
-			break;
-		case FALLING:
-		case JUMP_FALLING:
-			mario.position.y = rock.position.y + mario.bounds.height + mario.origin.y;
-			mario.jumpState = JUMP_STATE.GROUNDED;
-			break;
-		case JUMP_RISING:
-			mario.position.y = rock.position.y + mario.bounds.height + mario.origin.y;
-			break;
-		}
-	};
-
-	/**
-	 * mario collides with a gold coin. Increase score.
-	 * Set that gold coin's boolean value to true so
-	 * it knows it's been collected.
-	 * @param goldcoin
-	 */
-	private void onCollisionMarioWithGoldCoin(GoldCoin goldcoin) {
-		goldcoin.collected = true;
-		score += goldcoin.getScore();
-		Gdx.app.log(TAG, "Gold coin collected");
-	};
-
-	/**
-	 * Bunny collides with a feather. Increase score.
-	 * Set the powerup for the bunny to true that it has
-	 * a feather and make sure the feather knows
-	 * it's been collected.
-	 * @param feather
-	 */
-	private void onCollisionMarioWithLeaf(Leaf leaf) {
-		leaf.collected = true;
-		score += leaf.getScore();
-		level.mario.setLeafPowerup(true);
-		Gdx.app.log(TAG, "Featehr collected");
-	};
-
-	/**
-	 * Method handling bunnyhead collision with goal
-	 * sets goalReached to true
-	 */
-	 private void onCollisionMarioWithGoal() {
-	 goalReached = true;
-	 timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED;
-	  Vector2 centerPosMarioHead =
-			  new Vector2(level.mario.position);
-	  centerPosMarioHead.x += level.mario.bounds.width;
-	  //spawnCarrots(centerPosMarioHead, Constants.CARROTS_SPAWN_MAX,
-			 // Constants.CARROTS_SPAWN_RADIUS);
-	 }
-	
-	/**
-	 * Method for testing the collision of the bunnyhead with objects
-	 */
-	private void testCollisions() {
-		r1.set(level.mario.position.x, level.mario.position.y, level.mario.bounds.width,
-				level.mario.bounds.height);
-
-		//Test collison: Bunnny <-> Rocks
-		for (Rock rock : level.rocks) {
-			r2.set(rock.position.x, rock.position.y, rock.bounds.width, rock.bounds.height);
-			if (!r1.overlaps(r2))
-				continue;
-			onCollisionMarioWithRock(rock);
-			// IMPORTANT: must do all collisions for valid
-			// edge testing on rocks
-		}
-		// Test collision: BunnyHead <-> Gold Coins
-		for (GoldCoin goldcoin : level.goldcoins) {
-			if (goldcoin.collected)
-				continue;
-			r2.set(goldcoin.position.x, goldcoin.position.y, goldcoin.bounds.width, goldcoin.bounds.height);
-			if (!r1.overlaps(r2))
-				continue;
-			onCollisionMarioWithGoldCoin(goldcoin);
-			break;
-		}
-		// test collsion: Bunny Head <-> Feathers
-		for (Leaf leaf  : level.leaves) {
-			if (leaf.collected)
-				continue;
-			r2.set(leaf.position.x, leaf.position.y, leaf.bounds.width, leaf.bounds.height);
-			if (!r1.overlaps(r2))
-				continue;
-			onCollisionMarioWithLeaf(leaf);
-			break;
-			
-			//Test collision: BunnyHead <->Goal
-			if(!goalReached) {
-				r2.set(level.goal.bounds);
-				r2.x += level.goal.position.x;
-				r2.y += level.goal.position.y;
-				if(r1.overlaps(r2)) onCollisionMarioWithGoal();
-				
-			}
-		}
-	}
-
-	/**
 	 * Level initialization method
 	 */
 	private void initLevel() {
@@ -242,6 +129,7 @@ public class WorldController extends InputAdapter implements Disposable{
 	 */
 	private void init() {
 		Gdx.input.setInputProcessor(this);
+		b2world.setContactListener(this);
 		cameraHelper = new CameraHelper();
 		lives = Constants.LIVES_START;
 		livesVisual = lives;
@@ -285,7 +173,6 @@ public class WorldController extends InputAdapter implements Disposable{
 			handleInputGame(deltaTime);
 		}
 		level.update(deltaTime);
-		testCollisions();
 		cameraHelper.update(deltaTime);
 		if (!isGameOver() && isPlayerInWater()) {
 			lives--;
@@ -422,6 +309,30 @@ public class WorldController extends InputAdapter implements Disposable{
 	@Override
 	public void dispose() {
 		if(b2world != null)b2world.dispose();
+		
+	}
+
+	@Override
+	public void beginContact(Contact contact) {
+		
+		
+	}
+
+	@Override
+	public void endContact(Contact contact) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void preSolve(Contact contact, Manifold oldManifold) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void postSolve(Contact contact, ContactImpulse impulse) {
+		// TODO Auto-generated method stub
 		
 	}
 }
