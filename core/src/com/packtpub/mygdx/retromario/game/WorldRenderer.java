@@ -34,15 +34,13 @@ public class WorldRenderer implements Disposable {
 	 */
 	private void init () {
 		batch = new SpriteBatch(); // create a batch of sprites
-		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,
-				Constants.VIEWPORT_HEIGHT); // makes the camera
+		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT); // makes the camera
 		camera.position.set(0, 0, 0); // set origin position
 		camera.update(); // update to new position
 		
 		// creates a second camera specifically set up just to render
 		// the game's GUI
-		cameraGUI = new OrthographicCamera(Constants.VIEWPORT_WIDTH,
-				Constants.VIEWPORT_HEIGHT); // makes the camera
+		cameraGUI = new OrthographicCamera(Constants.VIEWPORT_WIDTH,Constants.VIEWPORT_HEIGHT); // makes the camera
 		cameraGUI.position.set(0, 0, 0); // set origin position for GUI camera
 		cameraGUI.setToOrtho(true); // flip y-axis
 		cameraGUI.update(); // makes sure the camera's updated
@@ -110,8 +108,7 @@ public class WorldRenderer implements Disposable {
 		float x = -15;
 		float y = -15;
 		// draw the gold coin in the top left corner, by the score
-		batch.draw(Assets.instance.goldCoin.goldCoin,
-				x, y, 50, 50, 100, 100, 0.35f, -0.35f, 0);
+		batch.draw(Assets.instance.goldCoin.goldCoin,x, y, 50, 50, 100, 100, 0.35f, -0.35f, 0);
 		// draws the score in the stored font
 		Assets.instance.fonts.defaultBig.draw(batch,
 				"" + worldController.score, x + 75, y + 37);
@@ -129,8 +126,7 @@ public class WorldRenderer implements Disposable {
 			if (worldController.lives <= i)
 				batch.setColor(0.5f, 0.5f, 0.5f, 0.5f);
 			// draws the bunny heads
-			batch.draw(Assets.instance.mario.head,
-					x + i * 50, y, 50, 50, 120, 100, 0.35f, -0.35f, 0);
+			batch.draw(Assets.instance.mario.head,x + i * 50, y, 50, 50, 120, 100, 0.35f, -0.35f, 0);
 			batch.setColor(1, 1, 1, 1); // sets a color for the bunny head
 		}
 	}
@@ -201,14 +197,14 @@ public class WorldRenderer implements Disposable {
 		float x = -15;
 		float y = 30;
 		// checks how much time is left for the power-up
-		float timeLeftFeatherPowerup = 
+		float timeLeftLeafPowerup = 
 				worldController.level.mario.timeLeftLeafPowerup;
-		if (timeLeftFeatherPowerup > 0) {
+		if (timeLeftLeafPowerup > 0) {
 			// Start icon fade in/out if the left power-up time
 			// is less than 4 seconds. The fade interval is set
 			// to 5 changes per second.
-			if (timeLeftFeatherPowerup < 4) {
-				if (((int)(timeLeftFeatherPowerup * 5) % 2) != 0) {
+			if (timeLeftLeafPowerup < 4) {
+				if (((int)(timeLeftLeafPowerup * 5) % 2) != 0) {
 					batch.setColor(1, 1, 1, 0.5f);;
 				}
 			}
@@ -216,7 +212,7 @@ public class WorldRenderer implements Disposable {
 					x, y, 50, 50, 100, 100, 0.35f, -0.35f, 0);
 			batch.setColor(1, 1, 1, 1);
 			Assets.instance.fonts.defaultSmall.draw(batch,
-					"" + (int)timeLeftFeatherPowerup, x + 60, y + 70);
+					"" + (int)timeLeftLeafPowerup, x + 60, y + 70);
 		}
 	}
 	

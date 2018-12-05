@@ -17,7 +17,7 @@ public class Constants {
 	public static final String TEXTURE_ATLAS_OBJECTS = "images/retromario.atlas";
 	
 	// Location of image file for level 01
-	public static final String LEVEL_01 = "level/level-1.png";
+	public static final String LEVEL_01 = "level/level-01.png";
 	
 	// Amount of extra lives at level start
 	public static final int LIVES_START = 3;
@@ -42,5 +42,8 @@ public class Constants {
 	
 	//location of uiskin json
 	public static final String SKIN_LIBGDX_UI = "images/uiskin.json";
+	
+	// Delay after game finished
+	public static final float TIME_DELAY_GAME_FINISHED = 6;
 	
 }

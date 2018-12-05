@@ -132,7 +132,7 @@ public class Assets implements Disposable, AssetErrorListener {
 			public final AtlasRegion goldCoin;
 			public final Animation<TextureRegion> animGoldCoin;
 			public AssetGoldCoin (TextureAtlas atlas) {
-				goldCoin = atlas.findRegion("item_gold_coin");
+				goldCoin = atlas.findRegion("gold_coin");
 				
 				//Animation: Gold Coin
 				Array<AtlasRegion> regions =
@@ -152,7 +152,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final AtlasRegion head;
 
 		public AssetMario (TextureAtlas atlas) {
-			head = atlas.findRegion("Mario");
+			head = atlas.findRegion("Retro-Mario-icon");
 			}
 		}
 	
@@ -197,12 +197,14 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final AtlasRegion mountainLeft;
 		public final AtlasRegion mountainRight;
 		public final AtlasRegion waterOverlay;
+		public final AtlasRegion goal;
 		
 		public AssetLevelDecoration(TextureAtlas atlas) {
 			cloud = atlas.findRegion("cloud");
 			mountainLeft = atlas.findRegion("mountain_left");
 			mountainRight = atlas.findRegion("mountain_right");
 			waterOverlay = atlas.findRegion("water_overlay");
+			goal = atlas.findRegion("goal");
 		}
 	}
 	

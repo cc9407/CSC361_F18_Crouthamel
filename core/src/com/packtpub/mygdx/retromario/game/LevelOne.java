@@ -8,6 +8,7 @@ import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.game.objects.Mountains;
 import com.packtpub.mygdx.retromario.game.objects.Clouds;
+import com.packtpub.mygdx.retromario.game.objects.Goal;
 import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
 import com.packtpub.mygdx.retromario.game.objects.Mario;
@@ -21,6 +22,7 @@ public class LevelOne
 		public Mario mario;
 		public Array<Leaf> leaves;
 		public Array<GoldCoin> goldcoins;
+		public Goal goal;
 	
 		
 	public enum BLOCK_TYPE {
@@ -28,7 +30,9 @@ public class LevelOne
 		ROCK(0, 255, 0), // green
 		PLAYER_SPAWNPOINT(255, 255, 255), // white
 		ITEM_LEAF(255, 165, 0), //orange
-		ITEM_GOLD_COIN(255, 255, 0); // yellow
+		ITEM_GOLD_COIN(255, 255, 0), // yellow
+		ENEMY_GOOMBA(255, 0, 255), // purple
+		GOAL(255, 0, 0); // red
 		
 		private int color;
 	
@@ -134,6 +138,13 @@ public class LevelOne
 						// set the gold coin then add it to the gold coins array
 						goldcoins.add((GoldCoin)obj);
 					}
+					// goal
+					else if (BLOCK_TYPE.GOAL.sameColor(currentPixel)) {
+						obj = new Goal();
+						offsetHeight = -7.0f;
+						obj.position.set(pixelX, baseHeight + offsetHeight);
+						goal = (Goal)obj;
+					}
 					// unknown object
 					else {
 						int r = 0xff & (currentPixel >>> 24); //red color channel
@@ -185,6 +196,9 @@ public class LevelOne
 			// Draw Feathers
 			for (Leaf leaf : leaves)
 				leaf.render(batch);
+			
+			// Draw Goal
+			goal.render(batch);
 		}
 		
 		public void update (float deltaTime) {

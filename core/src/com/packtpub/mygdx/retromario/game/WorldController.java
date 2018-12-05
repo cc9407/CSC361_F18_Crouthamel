@@ -50,6 +50,7 @@ public class WorldController extends InputAdapter implements Disposable{
 	private Rectangle r1 = new Rectangle();
 	private Rectangle r2 = new Rectangle();
 	private float timeLeftGameOverDelay;
+	private boolean goalReached; //has the goal been reached?
 	public World b2world;
 
 	/**
@@ -154,6 +155,20 @@ public class WorldController extends InputAdapter implements Disposable{
 	};
 
 	/**
+	 * Method handling bunnyhead collision with goal
+	 * sets goalReached to true
+	 */
+	 private void onCollisionMarioWithGoal() {
+	 goalReached = true;
+	 timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_FINISHED;
+	  Vector2 centerPosMarioHead =
+			  new Vector2(level.mario.position);
+	  centerPosMarioHead.x += level.mario.bounds.width;
+	  //spawnCarrots(centerPosMarioHead, Constants.CARROTS_SPAWN_MAX,
+			 // Constants.CARROTS_SPAWN_RADIUS);
+	 }
+	
+	/**
 	 * Method for testing the collision of the bunnyhead with objects
 	 */
 	private void testCollisions() {
@@ -188,6 +203,15 @@ public class WorldController extends InputAdapter implements Disposable{
 				continue;
 			onCollisionMarioWithLeaf(leaf);
 			break;
+			
+			//Test collision: BunnyHead <->Goal
+			if(!goalReached) {
+				r2.set(level.goal.bounds);
+				r2.x += level.goal.position.x;
+				r2.y += level.goal.position.y;
+				if(r1.overlaps(r2)) onCollisionMarioWithGoal();
+				
+			}
 		}
 	}
 
@@ -197,6 +221,7 @@ public class WorldController extends InputAdapter implements Disposable{
 	private void initLevel() {
 		score = 0;
 		scoreVisual = score;
+	    goalReached = false; //set goal reached to false at each init
 		level = new LevelOne(Constants.LEVEL_01);
 		cameraHelper.setTarget(level.mario);
 		initPhysics();
