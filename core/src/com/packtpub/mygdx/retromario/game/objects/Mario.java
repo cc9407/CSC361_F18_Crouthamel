@@ -2,7 +2,13 @@ package com.packtpub.mygdx.retromario.game.objects;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.packtpub.mygdx.retromario.game.Assets;
+import com.packtpub.mygdx.retromario.game.WorldController;
 import com.packtpub.mygdx.retromario.util.CharacterSkin;
 import com.packtpub.mygdx.retromario.util.Constants;
 import com.packtpub.mygdx.retromario.util.GamePreferences;
@@ -26,11 +32,15 @@ public class Mario extends AbstractGameObject
 	public boolean hasLeafPowerup;
 	public float timeLeftLeafPowerup;
 	
+	public Fixture playerPhysicsFixture;
+	public Fixture playerSensorFixture;
+	
 	/*
 	 * mario constructor 
 	 */
 	public Mario() {
-	      init();
+	    super();  
+		init();
 	    }
 	
 	/*
@@ -44,6 +54,18 @@ public class Mario extends AbstractGameObject
 		origin.set(dimension.x / 2, dimension.y / 2);
 		// Bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
+		
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.KinematicBody;
+		Body box = WorldController.b2world.createBody(bodyDef);
+		PolygonShape poly = new PolygonShape();
+		poly.setAsBox(0.5f, 0.5f);
+		playerPhysicsFixture = box.createFixture(poly, 1);
+		playerSensorFixture = box.createFixture(poly, 0);
+		poly.dispose();
+		body = box;
+		body.setUserData(this);
+		
 		// Set physics values
 		terminalVelocity.set(3.0f, 4.0f);
 		friction.set(12.0f, 0.0f);
@@ -59,7 +81,7 @@ public class Mario extends AbstractGameObject
 	};
 	
 	/*
-	 * setter for jumoing 
+	 * setter for jumping 
 	 */
 	public void setJumping (boolean jumpKeyPressed) {
 		

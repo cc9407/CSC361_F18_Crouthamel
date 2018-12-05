@@ -64,7 +64,7 @@ public class LevelOne
 		// initiates the level through a filename
 		public LevelOne (String filename) {
 			init(filename);
-			mario.position.y = 1.0f;
+			mario.body.setTransform(mario.position, 0);
 		}
 		
 		private void init (String filename) {
@@ -117,7 +117,8 @@ public class LevelOne
 						(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 						obj = new Mario();
 						offsetHeight = -3.0f;
-						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight + 10);
+						System.out.println(obj.position);
 						mario = (Mario)obj;
 					}
 					// leaf

@@ -11,10 +11,13 @@ package com.packtpub.mygdx.retromario.game.objects;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 
 public abstract class AbstractGameObject {
@@ -32,6 +35,9 @@ public abstract class AbstractGameObject {
 		public Vector2 acceleration;
 		public Rectangle bounds;
 		public Body body;
+		public BodyDef bodyDef;
+		public PolygonShape poly;
+		public Fixture fixture;
 		public float stateTime;
 		public Animation<TextureRegion> animation;
 		

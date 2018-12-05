@@ -57,8 +57,45 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	public AbstractGameObject destroy;
 	private float timeLeftGameOverDelay;
 	private boolean goalReached; //has the goal been reached?
-	public World b2world;
+	public static World b2world;
 
+	
+	/**
+	 * Initialize the world controller. Set lives.
+	 * Get a CameraHelper.
+	 */
+	private void init() {
+		b2world = new World(new Vector2(0, -20.0f),true);
+		Gdx.input.setInputProcessor(this);
+		b2world.setContactListener(this);
+		cameraHelper = new CameraHelper();
+		lives = Constants.LIVES_START;
+		livesVisual = lives;
+		timeLeftGameOverDelay = 0;
+		initLevel();
+	}
+	
+	/**
+	 * constructor for world controller
+	 * @param game instance of the game/BunnyMain
+	 */
+	public WorldController(Game game) {
+		this.game = game;
+		init();
+	}
+	
+	/**
+	 * Level initialization method
+	 */
+	private void initLevel() {
+		score = 0;
+		scoreVisual = score;
+	    goalReached = false; //set goal reached to false at each init
+		level = new LevelOne(Constants.LEVEL_01);
+		cameraHelper.setTarget(level.mario);
+		initPhysics();
+	}
+	
 	/**
 	 * Boolean checker method for if the game has ended
 	 * @return true if lives are < 0
@@ -67,6 +104,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		return lives < 0;
 	}
 
+	
 	/**
 	 * Checks if the player fell off screen
 	 * @return
@@ -98,44 +136,50 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 					rock.bounds.height / 2.0f, origin,0);
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = polygonShape;
+			fixtureDef.isSensor = true;
 			body.createFixture(fixtureDef);
 			polygonShape.dispose();
+			body.setUserData(rock);
 		}
-	}
-	
-	/**
-	 * Level initialization method
-	 */
-	private void initLevel() {
-		score = 0;
-		scoreVisual = score;
-	    goalReached = false; //set goal reached to false at each init
-		level = new LevelOne(Constants.LEVEL_01);
-		cameraHelper.setTarget(level.mario);
-		initPhysics();
-	}
-
-	/**
-	 * constructor for world controller
-	 * @param game instance of the game/BunnyMain
-	 */
-	public WorldController(Game game) {
-		this.game = game;
-		init();
-	}
-
-	/**
-	 * Initialize the world controller. Set lives.
-	 * Get a CameraHelper.
-	 */
-	private void init() {
-		Gdx.input.setInputProcessor(this);
-		b2world.setContactListener(this);
-		cameraHelper = new CameraHelper();
-		lives = Constants.LIVES_START;
-		livesVisual = lives;
-		timeLeftGameOverDelay = 0;
-		initLevel();
+		//coins
+		for(GoldCoin goldCoins : level.goldcoins) { 
+			BodyDef bodyDef = new BodyDef();
+			bodyDef.type = BodyType.KinematicBody;
+			bodyDef.position.set(goldCoins.position);
+			 Body body = b2world.createBody(bodyDef);
+			goldCoins.body = body;
+			PolygonShape polygonShape = new PolygonShape();
+			origin.x = goldCoins.bounds.width / 2.0f;
+			origin.y = goldCoins.bounds.height / 2.0f;
+			polygonShape.setAsBox(goldCoins.bounds.width / 2.0f,
+					goldCoins.bounds.height / 2.0f, origin,0);
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.shape = polygonShape;
+			fixtureDef.isSensor = true;
+			body.createFixture(fixtureDef);
+			polygonShape.dispose();
+			body.setUserData(goldCoins);
+		}
+		
+		//leaves
+		for(Leaf leaves : level.leaves) { 
+			BodyDef bodyDef = new BodyDef();
+			bodyDef.type = BodyType.KinematicBody;
+			bodyDef.position.set(leaves.position);
+			 Body body = b2world.createBody(bodyDef);
+			leaves.body = body;
+			PolygonShape polygonShape = new PolygonShape();
+			origin.x = leaves.bounds.width / 2.0f;
+			origin.y = leaves.bounds.height / 2.0f;
+			polygonShape.setAsBox(leaves.bounds.width / 2.0f,
+					leaves.bounds.height / 2.0f, origin,0);
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.shape = polygonShape;
+			fixtureDef.isSensor = true;
+			body.createFixture(fixtureDef);
+			polygonShape.dispose();
+			body.setUserData(leaves);
+			}
 	}
 
 	/**
@@ -165,6 +209,12 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 * @param deltaTime the game time
 	 */
 	public void update(float deltaTime) {
+		b2world.step(Gdx.graphics.getDeltaTime(), 4, 4);
+		if(destroy != null)
+		{
+			b2world.destroyBody(destroy.body);
+			destroy = null;
+		}
 		handleDebugInput(deltaTime);
 		if (isGameOver()) {
 			timeLeftGameOverDelay -= deltaTime;
@@ -274,7 +324,26 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 * @param deltaTime game time
 	 */
 	private void handleInputGame(float deltaTime) {
-		if (cameraHelper.hasTarget(level.mario)) {
+		Vector2 velocity = new Vector2(0,0);
+		
+		if(Gdx.input.isKeyPressed(Keys.RIGHT))
+		{
+			velocity.x += 6;
+		}
+			else if(Gdx.input.isKeyPressed(Keys.LEFT)) 
+			{
+				velocity.x -= 2;
+			}
+		
+		if(Gdx.input.isKeyPressed(Keys.SPACE))
+		{
+			velocity.y += 10;
+			level.mario.body.applyLinearImpulse(velocity, level.mario.body.getPosition(), true);
+		}
+		
+		level.mario.body.setLinearVelocity(velocity);
+		
+		/*if (cameraHelper.hasTarget(level.mario)) {
 			// player movement
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 				level.mario.velocity.x = -level.mario.terminalVelocity.x;
@@ -291,8 +360,8 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 				level.mario.setJumping(true);
 			} else {
 				level.mario.setJumping(false);
-			}
-		}
+			}*/
+		
 	}
 
 	/**

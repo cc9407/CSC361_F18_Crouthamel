@@ -80,6 +80,7 @@ public class Assets implements Disposable, AssetErrorListener {
 				koopa = new AssetKoopa(atlas);
 				levelDecoration = new AssetLevelDecoration(atlas);
 				goldCoin = new AssetGoldCoin(atlas);
+				fonts = new AssetFonts();
 			}
 		
 	
