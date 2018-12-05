@@ -29,6 +29,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Goal;
 import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
@@ -41,19 +42,19 @@ import com.packtpub.mygdx.retromario.util.Constants;
 
 
 public class WorldController extends InputAdapter implements Disposable, ContactListener{
-
+	
+	//instance variables and objects 
 	private static final String TAG = WorldController.class.getName();
 	public LevelOne level;
 	public int lives;
 	public int score;
 	private Game game;
 	public CameraHelper cameraHelper;
-	
+	public AbstractGameObject contactObject;
 	public float livesVisual;
 	public float scoreVisual;
-
-	private Rectangle r1 = new Rectangle();
-	private Rectangle r2 = new Rectangle();
+	public boolean done;
+	public AbstractGameObject destroy;
 	private float timeLeftGameOverDelay;
 	private boolean goalReached; //has the goal been reached?
 	public World b2world;
@@ -312,15 +313,67 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#beginContact(com.badlogic.gdx.physics.box2d.Contact)
+	 */
 	@Override
 	public void beginContact(Contact contact) {
-		
-		
+		if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == GoldCoin.class 
+				&& contact.getFixtureB().isSensor())
+		{
+			if(!done)
+			{
+				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+				((GoldCoin) contactObject).collected = true;
+				 destroy = contactObject;
+				done = true;
+			}
+		}
+		else if(contact.getFixtureB().getBody().getUserData() == level.mario && contact.getFixtureA().getBody().getUserData() == AbstractGameObject.class)
+		{
+			contactObject = (AbstractGameObject) contact.getFixtureA().getBody().getUserData();
+		}
+			else if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Leaf.class
+					&& contact.getFixtureB().isSensor())
+			{
+				if(!done)
+				{
+					contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+					((Leaf) contactObject).collected = true;
+					destroy = contactObject;
+					done = true;
+					
+					level.mario.setLeafPowerup(true);
+				}
+			}
+		else if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
+				&& contact.getFixtureB().isSensor())
+		{
+			if(!done)
+			{
+				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+				//((Goal) contactObject)
+				destroy = contactObject;
+				done = true;
+					
+				goalReached = true;
+			}
+		}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
+		if(contact.getFixtureA().getBody().getUserData() == contactObject)
+		{
+			done = false;
+			contactObject = null;
+		}
+			else if(contact.getFixtureB().getBody().getUserData() == contactObject)
+			{
+				done = false;
+				contactObject = null;
+			}
 		
 	}
 
