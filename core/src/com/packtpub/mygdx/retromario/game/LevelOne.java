@@ -8,6 +8,8 @@ import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.game.objects.Mountains;
 import com.packtpub.mygdx.retromario.game.objects.Clouds;
+import com.packtpub.mygdx.retromario.game.objects.Goal;
+import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
 import com.packtpub.mygdx.retromario.game.objects.Mario;
 import com.packtpub.mygdx.retromario.game.objects.WaterOverlay;
@@ -19,6 +21,8 @@ public class LevelOne
 	// object member variables
 		public Mario mario;
 		public Array<Leaf> leaves;
+		public Array<GoldCoin> goldcoins;
+		public Goal goal;
 	
 		
 	public enum BLOCK_TYPE {
@@ -26,7 +30,9 @@ public class LevelOne
 		ROCK(0, 255, 0), // green
 		PLAYER_SPAWNPOINT(255, 255, 255), // white
 		ITEM_LEAF(255, 165, 0), //orange
-		ITEM_GOLD_COIN(255, 255, 0); // yellow
+		ITEM_GOLD_COIN(255, 255, 0), // yellow
+		ENEMY_GOOMBA(255, 0, 255), // purple
+		GOAL(255, 0, 0); // red
 		
 		private int color;
 	
@@ -54,6 +60,7 @@ public class LevelOne
 		public Mountains mountains;
 		public WaterOverlay waterOverlay;
 		
+		
 		// initiates the level through a filename
 		public LevelOne (String filename) {
 			init(filename);
@@ -61,12 +68,15 @@ public class LevelOne
 		}
 		
 		private void init (String filename) {
-			// objects
+			// rocks
 			rocks = new Array<Rock>();
 			//player
 			mario = null;
 			//leaves array
 			leaves = new Array<Leaf>();
+			//coins
+			goldcoins = new Array<GoldCoin>();
+			
 			
 			
 			// load image file that represents the level data
@@ -105,14 +115,35 @@ public class LevelOne
 					// player spawn point
 					else if
 						(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
+						obj = new Mario();
+						offsetHeight = -3.0f;
+						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+						mario = (Mario)obj;
 					}
 					// leaf
 					else if
 						(BLOCK_TYPE.ITEM_LEAF.sameColor(currentPixel)) {
+							obj = new Leaf();
+							offsetHeight = -1.5f;
+							obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+							// set the leaf then add it to the leaf array
+							leaves.add((Leaf)obj);
 					}
 					// gold coin
 					else if
 						(BLOCK_TYPE.ITEM_GOLD_COIN.sameColor(currentPixel)) {
+						obj = new GoldCoin();
+						offsetHeight = -1.5f;
+						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+						// set the gold coin then add it to the gold coins array
+						goldcoins.add((GoldCoin)obj);
+					}
+					// goal
+					else if (BLOCK_TYPE.GOAL.sameColor(currentPixel)) {
+						obj = new Goal();
+						offsetHeight = -7.0f;
+						obj.position.set(pixelX, baseHeight + offsetHeight);
+						goal = (Goal)obj;
 					}
 					// unknown object
 					else {
@@ -149,6 +180,10 @@ public class LevelOne
 			for (Rock rock : rocks)
 				rock.render(batch);
 			
+			// Draw Gold Coins
+			for (GoldCoin goldCoin : goldcoins)
+				goldCoin.render(batch);
+			
 			// Draw Clouds
 			clouds.render(batch);
 			
@@ -161,6 +196,9 @@ public class LevelOne
 			// Draw Feathers
 			for (Leaf leaf : leaves)
 				leaf.render(batch);
+			
+			// Draw Goal
+			goal.render(batch);
 		}
 		
 		public void update (float deltaTime) {
@@ -174,7 +212,10 @@ public class LevelOne
 			for(Rock rock : rocks)
 				rock.update(deltaTime);
 			
-		
+			// update the gold coins
+			// aka: have they been picked up yet
+			for(GoldCoin goldCoin : goldcoins)
+				goldCoin.update(deltaTime);
 			
 			// update the feathers
 			// aka: have they been picked up yet

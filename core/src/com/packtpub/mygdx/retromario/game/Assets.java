@@ -14,11 +14,14 @@ import com.badlogic.gdx.assets.AssetErrorListener;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.packtpub.mygdx.retromario.util.Constants;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 
 
 
@@ -32,6 +35,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetLeaf leaf;
 	public AssetGoomba goomba;
 	public AssetKoopa koopa;
+	public AssetGoldCoin goldCoin;
 	public AssetLevelDecoration levelDecoration;
 	public AssetFonts fonts;
 	//asset manager object
@@ -75,6 +79,7 @@ public class Assets implements Disposable, AssetErrorListener {
 				goomba = new AssetGoomba(atlas);
 				koopa = new AssetKoopa(atlas);
 				levelDecoration = new AssetLevelDecoration(atlas);
+				goldCoin = new AssetGoldCoin(atlas);
 			}
 		
 	
@@ -86,6 +91,9 @@ public class Assets implements Disposable, AssetErrorListener {
 	@Override
 	public void dispose() {
 		assetManager.dispose();
+		fonts.defaultSmall.dispose();
+		fonts.defaultNormal.dispose();
+		fonts.defaultBig.dispose();
 	}
 	
 	/*
@@ -119,6 +127,23 @@ public class Assets implements Disposable, AssetErrorListener {
 		}
 	}
 
+	// Builds the assets for gold coins
+		public class AssetGoldCoin {
+			public final AtlasRegion goldCoin;
+			public final Animation<TextureRegion> animGoldCoin;
+			public AssetGoldCoin (TextureAtlas atlas) {
+				goldCoin = atlas.findRegion("gold_coin");
+				
+				//Animation: Gold Coin
+				Array<AtlasRegion> regions =
+				atlas.findRegions("anim_gold_coin");
+				AtlasRegion region = regions.first();
+				for(int i = 0; i < 10; i++)
+					regions.insert(0,region);
+				animGoldCoin = new Animation<TextureRegion>(1.0f /20.0f,regions,Animation.PlayMode.LOOP_PINGPONG); //loops animation
+			}
+		}
+	
 	/*
 	 *  This inner class contains a member variable called "head"
 	 * and will display mario
@@ -127,7 +152,7 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final AtlasRegion head;
 
 		public AssetMario (TextureAtlas atlas) {
-			head = atlas.findRegion("Mario");
+			head = atlas.findRegion("Retro-Mario-icon");
 			}
 		}
 	
@@ -172,12 +197,14 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final AtlasRegion mountainLeft;
 		public final AtlasRegion mountainRight;
 		public final AtlasRegion waterOverlay;
+		public final AtlasRegion goal;
 		
 		public AssetLevelDecoration(TextureAtlas atlas) {
 			cloud = atlas.findRegion("cloud");
 			mountainLeft = atlas.findRegion("mountain_left");
 			mountainRight = atlas.findRegion("mountain_right");
 			waterOverlay = atlas.findRegion("water_overlay");
+			goal = atlas.findRegion("goal");
 		}
 	}
 	
