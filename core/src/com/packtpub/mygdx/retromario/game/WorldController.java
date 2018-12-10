@@ -104,6 +104,13 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	public boolean isGameOver() {
 		return lives < 0;
 	}
+	
+	/*
+	 * returns goal reached variable
+	 */
+	public boolean isGameOverTwo() {
+		return goalReached;
+	}
 
 	
 	/**
@@ -185,6 +192,27 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			polygonShape.dispose();
 			body.setUserData(leaves);
 			}
+		
+//		BodyDef bodyDef = new BodyDef();
+//		bodyDef.type = BodyType.StaticBody;
+//		bodyDef.position.set(level.goal.position);
+//		 Body body = b2world.createBody(bodyDef);
+//		level.goal.body = body;
+//		PolygonShape polygonShape = new PolygonShape();
+//		origin.x = level.goal.bounds.width / 2.0f;
+//		origin.y = level.goal.bounds.height / 2.0f;
+//		polygonShape.setAsBox(level.goal.bounds.width / 2.0f,
+//				level.goal.bounds.height / 2.0f, origin,0);
+//		System.out.println(level.goal.bounds.height +" "+ level.goal.bounds.width);
+//		FixtureDef fixtureDef = new FixtureDef();
+//		fixtureDef.shape = polygonShape;
+//		FixtureDef fixtureSensor = new FixtureDef();
+//		fixtureSensor.shape = polygonShape;
+//		fixtureSensor.isSensor = true;
+//		level.goal.body.createFixture(fixtureDef);
+//		level.goal.body.createFixture(fixtureSensor);
+//		polygonShape.dispose();
+//		level.goal.body.setUserData(level.goal);
 	}
 
 	/**
@@ -230,7 +258,6 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 				System.out.println("No menu yet");
 		} else {
 			handleInputGame(deltaTime);
-			
 		}
 		level.update(deltaTime);
 		cameraHelper.update(deltaTime);
@@ -455,16 +482,17 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 					airTime = 35;
 				}
 			}
-		else if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
+		 if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
 				&& contact.getFixtureB().isSensor())
 		{
+			 System.out.println("GOAAAAALLLLLL");
 			if(!done)
 			{
+				
 				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
 //				((Goal) contactObject).
 				destroy = contactObject;
 				done = true;
-					
 				goalReached = true;
 			}
 		}
