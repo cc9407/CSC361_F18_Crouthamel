@@ -65,6 +65,7 @@ public class LevelOne
 		public LevelOne (String filename) {
 			init(filename);
 			mario.body.setTransform(mario.position, 0);
+			goal.body.setTransform(goal.position, 0);
 		}
 		
 		private void init (String filename) {
@@ -86,6 +87,7 @@ public class LevelOne
 			for (int pixelY = 0; pixelY < pixmap.getHeight(); pixelY++) {
 				for (int pixelX = 0; pixelX < pixmap.getWidth(); pixelX++) {
 					AbstractGameObject obj = null;
+					AbstractGameObject tempObj = null;
 					float offsetHeight = 0;
 					// height grows from bottom to top
 					float baseHeight = pixmap.getHeight() - pixelY;
@@ -101,23 +103,24 @@ public class LevelOne
 					}
 					// rock
 					else if (BLOCK_TYPE.ROCK.sameColor(currentPixel)) {
-						if (lastPixel != currentPixel) {
+						//if (lastPixel != currentPixel) {
 							obj = new Rock();
-							float heightIncreaseFactor = 0.25f;
-							offsetHeight = -2.5f;
-							obj.position.set(pixelX, baseHeight * obj.dimension.y 
-									* heightIncreaseFactor + offsetHeight);
+							//float heightIncreaseFactor = 0.25f;
+							//offsetHeight = -2.5f;
+//							obj.position.set(pixelX, baseHeight * obj.dimension.y 
+//									* heightIncreaseFactor + offsetHeight);
+							obj.position.set(pixelX, baseHeight * obj.dimension.y + offsetHeight);
 							rocks.add((Rock)obj);
-						} else {
-							rocks.get(rocks.size - 1).increaseLength(1);
-						}
+						//} else {
+							//rocks.get(rocks.size - 1).increaseLength(1);
+						//}
 					}
 					// player spawn point
 					else if
 						(BLOCK_TYPE.PLAYER_SPAWNPOINT.sameColor(currentPixel)) {
 						obj = new Mario();
-						offsetHeight = -3.0f;
-						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight + 10);
+						offsetHeight = 1.0f;
+						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
 						System.out.println(obj.position);
 						mario = (Mario)obj;
 					}
@@ -125,7 +128,7 @@ public class LevelOne
 					else if
 						(BLOCK_TYPE.ITEM_LEAF.sameColor(currentPixel)) {
 							obj = new Leaf();
-							offsetHeight = -1.5f;
+							offsetHeight = 2.5f;
 							obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
 							// set the leaf then add it to the leaf array
 							leaves.add((Leaf)obj);
@@ -134,15 +137,16 @@ public class LevelOne
 					else if
 						(BLOCK_TYPE.ITEM_GOLD_COIN.sameColor(currentPixel)) {
 						obj = new GoldCoin();
-						offsetHeight = -1.5f;
-						obj.position.set(pixelX,baseHeight * obj.dimension.y + offsetHeight);
+						tempObj = new Rock();
+						offsetHeight = 0.0f;
+						obj.position.set(pixelX,baseHeight * tempObj.dimension.y + offsetHeight);
 						// set the gold coin then add it to the gold coins array
 						goldcoins.add((GoldCoin)obj);
 					}
 					// goal
 					else if (BLOCK_TYPE.GOAL.sameColor(currentPixel)) {
 						obj = new Goal();
-						offsetHeight = -7.0f;
+						offsetHeight = +2.0f;
 						obj.position.set(pixelX, baseHeight + offsetHeight);
 						goal = (Goal)obj;
 					}

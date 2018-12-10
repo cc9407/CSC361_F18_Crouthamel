@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -56,14 +57,16 @@ public class Mario extends AbstractGameObject
 		bounds.set(0, 0, dimension.x, dimension.y);
 		
 		bodyDef = new BodyDef();
-		bodyDef.type = BodyType.KinematicBody;
+		bodyDef.type = BodyType.DynamicBody;
 		Body box = WorldController.b2world.createBody(bodyDef);
 		PolygonShape poly = new PolygonShape();
-		poly.setAsBox(0.5f, 0.5f);
+		poly.setAsBox(0.4f, 0.4f);
 		playerPhysicsFixture = box.createFixture(poly, 1);
 		playerSensorFixture = box.createFixture(poly, 0);
 		poly.dispose();
+		
 		body = box;
+		body.setFixedRotation(true);
 		body.setUserData(this);
 		
 		// Set physics values
@@ -208,7 +211,7 @@ public class Mario extends AbstractGameObject
 	
 		// Draw image
 		reg = regHead;
-		batch.draw(reg.getTexture(), position.x, position.y, origin.x,origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
+		batch.draw(reg.getTexture(), position.x - 0.4f, position.y - 0.4f, origin.x,origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
 				reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(),reg.getRegionHeight(), viewDirection == VIEW_DIRECTION.LEFT,false);
 	
 		// Reset color to white

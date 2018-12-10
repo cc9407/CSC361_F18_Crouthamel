@@ -16,7 +16,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -33,8 +32,6 @@ import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Goal;
 import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
-import com.packtpub.mygdx.retromario.game.objects.Mario;
-import com.packtpub.mygdx.retromario.game.objects.Mario.JUMP_STATE;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.screens.MenuScreen;
 import com.packtpub.mygdx.retromario.util.CameraHelper;
@@ -58,6 +55,8 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	private float timeLeftGameOverDelay;
 	private boolean goalReached; //has the goal been reached?
 	public static World b2world;
+	public boolean grounded = false;
+	public int airTime = 10;
 
 	
 	/**
@@ -92,8 +91,10 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		scoreVisual = score;
 	    goalReached = false; //set goal reached to false at each init
 		level = new LevelOne(Constants.LEVEL_01);
+		System.out.println("InitLevel: " + level.mario.body.getPosition() + " : " + level.mario.position);
 		cameraHelper.setTarget(level.mario);
 		initPhysics();
+		System.out.println("InitPhys: " + level.mario.body.getPosition() + " : " + level.mario.position);
 	}
 	
 	/**
@@ -119,13 +120,13 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 * dispose of excess to free memory
 	 */
 	private void initPhysics() {
-		if(b2world != null) b2world.dispose(); //destroy if already init
-		b2world = new World(new Vector2(0, -9.81f),true);
+//		if(b2world != null) b2world.dispose(); //destroy if already init
+//		b2world = new World(new Vector2(0, -9.81f),true);
 		//Rocks
 		Vector2 origin = new Vector2();
 		for(Rock rock : level.rocks) { //for each rock
 			BodyDef bodyDef = new BodyDef();
-			bodyDef.type = BodyType.KinematicBody;
+			bodyDef.type = BodyType.StaticBody;
 			bodyDef.position.set(rock.position);
 			 Body body = b2world.createBody(bodyDef);
 			rock.body = body;
@@ -134,12 +135,16 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			origin.y = rock.bounds.height / 2.0f;
 			polygonShape.setAsBox(rock.bounds.width / 2.0f,
 					rock.bounds.height / 2.0f, origin,0);
+			System.out.println(rock.bounds.height +" "+ rock.bounds.width);
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = polygonShape;
-			fixtureDef.isSensor = true;
-			body.createFixture(fixtureDef);
+			FixtureDef fixtureSensor = new FixtureDef();
+			fixtureSensor.shape = polygonShape;
+			fixtureSensor.isSensor = true;
+			rock.body.createFixture(fixtureDef);
+			rock.body.createFixture(fixtureSensor);
 			polygonShape.dispose();
-			body.setUserData(rock);
+			rock.body.setUserData(rock);
 		}
 		//coins
 		for(GoldCoin goldCoins : level.goldcoins) { 
@@ -156,7 +161,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = polygonShape;
 			fixtureDef.isSensor = true;
-			body.createFixture(fixtureDef);
+			goldCoins.body.createFixture(fixtureDef);
 			polygonShape.dispose();
 			body.setUserData(goldCoins);
 		}
@@ -210,6 +215,9 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 */
 	public void update(float deltaTime) {
 		b2world.step(Gdx.graphics.getDeltaTime(), 4, 4);
+		
+		//System.out.println(level.mario.body.getPosition() + " : " + level.mario.position);
+		
 		if(destroy != null)
 		{
 			b2world.destroyBody(destroy.body);
@@ -222,6 +230,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 				System.out.println("No menu yet");
 		} else {
 			handleInputGame(deltaTime);
+			
 		}
 		level.update(deltaTime);
 		cameraHelper.update(deltaTime);
@@ -325,22 +334,33 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 */
 	private void handleInputGame(float deltaTime) {
 		Vector2 velocity = new Vector2(0,0);
-		
+		Vector2 pos = level.mario.body.getPosition();
 		if(Gdx.input.isKeyPressed(Keys.RIGHT))
 		{
 			velocity.x += 6;
 		}
 			else if(Gdx.input.isKeyPressed(Keys.LEFT)) 
 			{
-				velocity.x -= 2;
+				velocity.x -= 6;
 			}
 		
-		if(Gdx.input.isKeyPressed(Keys.SPACE))
+		if(Gdx.input.isKeyPressed(Keys.SPACE) && grounded == true && airTime-- > 0)
 		{
-			velocity.y += 10;
-			level.mario.body.applyLinearImpulse(velocity, level.mario.body.getPosition(), true);
+			System.out.println("JUMPING");
+			System.out.println("AirTime: " + airTime);
+			//grounded = false;
+//			velocity.y += 30;
+			level.mario.body.setLinearVelocity(0,velocity.y += 10);
+			//level.mario.body.setLinearVelocity(velocity.x,0);
+			//level.mario.body.setTransform(pos.x,pos.y + 0.01f, 0);
+			//level.mario.body.applyLinearImpulse(0 , 10, pos.x, pos.y, true);
 		}
 		
+//		if(!grounded)
+//		{
+			velocity.y -= 4.0f;
+//		}
+			
 		level.mario.body.setLinearVelocity(velocity);
 		
 		/*if (cameraHelper.hasTarget(level.mario)) {
@@ -388,15 +408,33 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 */
 	@Override
 	public void beginContact(Contact contact) {
+		System.out.println("SENSOR");
+		if (contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Rock.class
+				&& contact.getFixtureB().isSensor())
+		{
+			//if(!done)
+			//{
+				grounded = true;
+				if(!level.mario.hasLeafPowerup)
+				{
+					airTime = 20;
+				} else {
+					airTime = 35;
+				}
+			//	done = true;
+			//}
+		}
+		
 		if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == GoldCoin.class 
 				&& contact.getFixtureB().isSensor())
 		{
 			if(!done)
 			{
 				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
-				((GoldCoin) contactObject).collected = true;
-				 destroy = contactObject;
+				((GoldCoin) contactObject).collected = true; 
+				destroy = contactObject;
 				done = true;
+				score += ((GoldCoin) contactObject).getScore();
 			}
 		}
 		else if(contact.getFixtureB().getBody().getUserData() == level.mario && contact.getFixtureA().getBody().getUserData() == AbstractGameObject.class)
@@ -414,6 +452,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 					done = true;
 					
 					level.mario.setLeafPowerup(true);
+					airTime = 35;
 				}
 			}
 		else if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
@@ -422,7 +461,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			if(!done)
 			{
 				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
-				//((Goal) contactObject)
+//				((Goal) contactObject).
 				destroy = contactObject;
 				done = true;
 					
@@ -437,6 +476,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		{
 			done = false;
 			contactObject = null;
+			//grounded = false;
 		}
 			else if(contact.getFixtureB().getBody().getUserData() == contactObject)
 			{
