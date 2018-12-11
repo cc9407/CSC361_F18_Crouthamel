@@ -66,13 +66,13 @@ public class Assets implements Disposable, AssetErrorListener {
 		
 		// load sounds
 		assetManager.load("sounds/jump.wav", Sound.class);
-		assetManager.load("sounds/jump_with_feather.wav", Sound.class);
+		assetManager.load("sounds/jump_with_leaf.wav", Sound.class);
 		assetManager.load("sounds/pickup_coin.wav", Sound.class);
-		assetManager.load("sounds/pickup_feather.wav", Sound.class);
+		assetManager.load("sounds/pickup_leaf.wav", Sound.class);
 		assetManager.load("sounds/live_lost.wav", Sound.class);
 		
 		// load music
-		assetManager.load("music/keith303_-_brand_new_highscore.mp3",Music.class);
+		assetManager.load("music/05_mb_stage_theme_2.mp3",Music.class);
 		
 		//start loading assets and wait until finished
 		assetManager.finishLoading();
@@ -283,11 +283,9 @@ public class Assets implements Disposable, AssetErrorListener {
 		public final Sound liveLost;
 		public AssetSounds (AssetManager am) {
 		jump = am.get("sounds/jump.wav", Sound.class);
-		jumpWithLeaf = am.get("sounds/jump_with_feather.wav",
-		Sound.class);
+		jumpWithLeaf = am.get("sounds/jump_with_leaf.wav",Sound.class);
 		pickupCoin = am.get("sounds/pickup_coin.wav", Sound.class);
-		pickupLeaf = am.get("sounds/pickup_feather.wav",
-		Sound.class);
+		pickupLeaf = am.get("sounds/pickup_leaf.wav",Sound.class);
 		liveLost = am.get("sounds/live_lost.wav", Sound.class);
 		}
 	}
@@ -298,8 +296,7 @@ public class Assets implements Disposable, AssetErrorListener {
 	public class AssetMusic {
 		public final Music song01;
 		public AssetMusic (AssetManager am) {
-		song01 = am.get("music/keith303_-_brand_new_highscore.mp3",
-		Music.class);
+		song01 = am.get("music/05_mb_stage_theme_2.mp3",Music.class);
 		}
 	}
 }

@@ -380,7 +380,14 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			//grounded = false;
 //			velocity.y += 30;
 			level.mario.body.setLinearVelocity(0,velocity.y += 10);
-			AudioManager.instance.play(Assets.instance.sounds.jumpWithLeaf);
+			
+			if(level.mario.hasLeafPowerup)
+			{
+				AudioManager.instance.play(Assets.instance.sounds.jumpWithLeaf);
+			}
+			else {
+				AudioManager.instance.play(Assets.instance.sounds.jump);
+			}
 			//level.mario.body.setLinearVelocity(velocity.x,0);
 			//level.mario.body.setTransform(pos.x,pos.y + 0.01f, 0);
 			//level.mario.body.applyLinearImpulse(0 , 10, pos.x, pos.y, true);
