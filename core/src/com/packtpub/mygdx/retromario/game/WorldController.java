@@ -34,6 +34,7 @@ import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.screens.MenuScreen;
+import com.packtpub.mygdx.retromario.util.AudioManager;
 import com.packtpub.mygdx.retromario.util.CameraHelper;
 import com.packtpub.mygdx.retromario.util.Constants;
 
@@ -262,6 +263,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		level.update(deltaTime);
 		cameraHelper.update(deltaTime);
 		if (!isGameOver() && isPlayerInWater()) {
+			AudioManager.instance.play(Assets.instance.sounds.liveLost);
 			lives--;
 			if (isGameOver())
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
@@ -378,6 +380,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			//grounded = false;
 //			velocity.y += 30;
 			level.mario.body.setLinearVelocity(0,velocity.y += 10);
+			AudioManager.instance.play(Assets.instance.sounds.jumpWithLeaf);
 			//level.mario.body.setLinearVelocity(velocity.x,0);
 			//level.mario.body.setTransform(pos.x,pos.y + 0.01f, 0);
 			//level.mario.body.applyLinearImpulse(0 , 10, pos.x, pos.y, true);
@@ -496,6 +499,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 					
 					level.mario.setLeafPowerup(true);
 					airTime = 35;
+					AudioManager.instance.play(Assets.instance.sounds.pickupLeaf);
 				}
 			}
 	}
