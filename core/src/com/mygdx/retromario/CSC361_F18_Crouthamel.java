@@ -12,6 +12,8 @@ import com.packtpub.mygdx.retromario.game.Assets;
 import com.packtpub.mygdx.retromario.game.WorldController;
 import com.packtpub.mygdx.retromario.game.WorldRenderer;
 import com.packtpub.mygdx.retromario.screens.MenuScreen;
+import com.packtpub.mygdx.retromario.util.AudioManager;
+import com.packtpub.mygdx.retromario.util.GamePreferences;
 
 public class CSC361_F18_Crouthamel extends Game {
 	
@@ -21,6 +23,9 @@ public class CSC361_F18_Crouthamel extends Game {
 	Gdx.app.setLogLevel(Application.LOG_DEBUG);
 	// Load assets
 	Assets.instance.init(new AssetManager());
+	// Load preferences for audio settings and start playing music
+	GamePreferences.instance.load();
+	AudioManager.instance.play(Assets.instance.music.song01);
 	// Start game at menu screen
 	setScreen(new MenuScreen(this));
 	}

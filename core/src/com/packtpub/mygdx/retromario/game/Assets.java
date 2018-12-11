@@ -22,6 +22,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.packtpub.mygdx.retromario.util.Constants;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 
 
@@ -38,6 +40,8 @@ public class Assets implements Disposable, AssetErrorListener {
 	public AssetGoldCoin goldCoin;
 	public AssetLevelDecoration levelDecoration;
 	public AssetFonts fonts;
+	public AssetSounds sounds;
+	public AssetMusic music;
 	//asset manager object
 	private AssetManager assetManager;
 	
@@ -60,6 +64,16 @@ public class Assets implements Disposable, AssetErrorListener {
 		//load texture atlas
 		assetManager.load(Constants.TEXTURE_ATLAS_OBJECTS, TextureAtlas.class);
 		
+		// load sounds
+		assetManager.load("sounds/jump.wav", Sound.class);
+		assetManager.load("sounds/jump_with_leaf.wav", Sound.class);
+		assetManager.load("sounds/pickup_coin.wav", Sound.class);
+		assetManager.load("sounds/pickup_leaf.wav", Sound.class);
+		assetManager.load("sounds/live_lost.wav", Sound.class);
+		
+		// load music
+		assetManager.load("music/05_mb_stage_theme_2.mp3",Music.class);
+		
 		//start loading assets and wait until finished
 		assetManager.finishLoading();
 		Gdx.app.debug(TAG, "# of assets loaded: " + assetManager.getAssetNames().size );
@@ -81,6 +95,8 @@ public class Assets implements Disposable, AssetErrorListener {
 				levelDecoration = new AssetLevelDecoration(atlas);
 				goldCoin = new AssetGoldCoin(atlas);
 				fonts = new AssetFonts();
+				sounds = new AssetSounds(assetManager);
+				music = new AssetMusic(assetManager);
 			}
 		
 	
@@ -253,6 +269,34 @@ public class Assets implements Disposable, AssetErrorListener {
 			TextureFilter.Linear, TextureFilter.Linear);
 			defaultBig.getRegion().getTexture().setFilter(
 			TextureFilter.Linear, TextureFilter.Linear);
+		}
+	}
+	
+	/*
+	 * asset sound method
+	 */
+	public class AssetSounds {
+		public final Sound jump;
+		public final Sound jumpWithLeaf;
+		public final Sound pickupCoin;
+		public final Sound pickupLeaf;
+		public final Sound liveLost;
+		public AssetSounds (AssetManager am) {
+		jump = am.get("sounds/jump.wav", Sound.class);
+		jumpWithLeaf = am.get("sounds/jump_with_leaf.wav",Sound.class);
+		pickupCoin = am.get("sounds/pickup_coin.wav", Sound.class);
+		pickupLeaf = am.get("sounds/pickup_leaf.wav",Sound.class);
+		liveLost = am.get("sounds/live_lost.wav", Sound.class);
+		}
+	}
+	
+	/*
+	 * asset music method
+	 * */
+	public class AssetMusic {
+		public final Music song01;
+		public AssetMusic (AssetManager am) {
+		song01 = am.get("music/05_mb_stage_theme_2.mp3",Music.class);
 		}
 	}
 }
