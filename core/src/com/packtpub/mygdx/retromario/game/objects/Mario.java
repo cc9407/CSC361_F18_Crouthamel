@@ -1,8 +1,17 @@
 package com.packtpub.mygdx.retromario.game.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.packtpub.mygdx.retromario.game.Assets;
+import com.packtpub.mygdx.retromario.game.WorldController;
 import com.packtpub.mygdx.retromario.util.CharacterSkin;
 import com.packtpub.mygdx.retromario.util.Constants;
 import com.packtpub.mygdx.retromario.util.GamePreferences;
@@ -26,11 +35,19 @@ public class Mario extends AbstractGameObject
 	public boolean hasLeafPowerup;
 	public float timeLeftLeafPowerup;
 	
+	public Fixture playerPhysicsFixture;
+	public Fixture playerSensorFixture;
+	
+	private Animation<TextureRegion> animMario;
+	
+	public ParticleEffect marioParticles = new ParticleEffect();
+	
 	/*
 	 * mario constructor 
 	 */
 	public Mario() {
-	      init();
+	    super();  
+		init();
 	    }
 	
 	/*
@@ -44,6 +61,20 @@ public class Mario extends AbstractGameObject
 		origin.set(dimension.x / 2, dimension.y / 2);
 		// Bounding box for collision detection
 		bounds.set(0, 0, dimension.x, dimension.y);
+		
+		bodyDef = new BodyDef();
+		bodyDef.type = BodyType.DynamicBody;
+		Body box = WorldController.b2world.createBody(bodyDef);
+		PolygonShape poly = new PolygonShape();
+		poly.setAsBox(0.4f, 0.4f);
+		playerPhysicsFixture = box.createFixture(poly, 1);
+		playerSensorFixture = box.createFixture(poly, 0);
+		poly.dispose();
+		
+		body = box;
+		body.setFixedRotation(true);
+		body.setUserData(this);
+		
 		// Set physics values
 		terminalVelocity.set(3.0f, 4.0f);
 		friction.set(12.0f, 0.0f);
@@ -56,10 +87,16 @@ public class Mario extends AbstractGameObject
 		// Power-ups
 		hasLeafPowerup = false;
 		timeLeftLeafPowerup = 0;
+		
+		animMario = Assets.instance.mario.animMario;
+		setAnimation(animMario);
+		
+		marioParticles.load(Gdx.files.internal("particles/leaf_particle.pfx"), Gdx.files.internal("particles"));
+		//stateTime = MathUtils.random(0.0f,1.0f);
 	};
 	
 	/*
-	 * setter for jumoing 
+	 * setter for jumping 
 	 */
 	public void setJumping (boolean jumpKeyPressed) {
 		
@@ -95,6 +132,8 @@ public class Mario extends AbstractGameObject
 		hasLeafPowerup = pickedUp;
 		if (pickedUp) {
 		timeLeftLeafPowerup =Constants.ITEM_LEAF_POWERUP_DURATION;
+		marioParticles.setPosition(body.getPosition().x + dimension.x / 2,body.getPosition().y);
+		marioParticles.start();
 		}
 	};
 	
@@ -102,7 +141,7 @@ public class Mario extends AbstractGameObject
 	 * boolean for leaf power up
 	 */
 	public boolean hasLeafPowerup () {
-	
+		
 		return hasLeafPowerup && timeLeftLeafPowerup > 0;
 	};
 	
@@ -118,13 +157,17 @@ public class Mario extends AbstractGameObject
 	viewDirection = velocity.x < 0 ? VIEW_DIRECTION.LEFT :
 	VIEW_DIRECTION.RIGHT;
 	}
+//	
+//	setAnimation(animMario);
+	
 	if (timeLeftLeafPowerup > 0) {
 	timeLeftLeafPowerup -= deltaTime;
-	
+	marioParticles.update(deltaTime);
 	    if (timeLeftLeafPowerup < 0) {
 	         // disable power-up
 		     timeLeftLeafPowerup = 0;
 		     setLeafPowerup(false);
+		     marioParticles.allowCompletion();
 	         }
 	  }	
    }
@@ -176,17 +219,18 @@ public class Mario extends AbstractGameObject
 	@Override
 	public void render (SpriteBatch batch) {
 		TextureRegion reg = null;
+		
 		// Apply Skin Color
 		batch.setColor(CharacterSkin.values()[GamePreferences.instance.charSkin].getColor());
-		
 		// Set special color when game object has a leaf power-up
 		if (hasLeafPowerup) {
 			batch.setColor(1.0f, 0.8f, 0.0f, 1.0f);
+			marioParticles.draw(batch);
 		}
 	
 		// Draw image
-		reg = regHead;
-		batch.draw(reg.getTexture(), position.x, position.y, origin.x,origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
+		reg = animation.getKeyFrame(stateTime,true); //set reg var
+		batch.draw(reg.getTexture(), position.x - 0.4f, position.y - 0.4f, origin.x,origin.y, dimension.x, dimension.y, scale.x, scale.y, rotation,
 				reg.getRegionX(), reg.getRegionY(), reg.getRegionWidth(),reg.getRegionHeight(), viewDirection == VIEW_DIRECTION.LEFT,false);
 	
 		// Reset color to white
