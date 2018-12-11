@@ -477,6 +477,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 				destroy = contactObject;
 				done = true;
 				score += ((GoldCoin) contactObject).getScore();
+				AudioManager.instance.play(Assets.instance.sounds.pickupCoin);
 			}
 		}
 		else if(contact.getFixtureB().getBody().getUserData() == level.mario && contact.getFixtureA().getBody().getUserData() == AbstractGameObject.class)
