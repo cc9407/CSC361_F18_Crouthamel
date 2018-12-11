@@ -435,7 +435,22 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 */
 	@Override
 	public void beginContact(Contact contact) {
-		System.out.println("SENSOR");
+		//System.out.println("SENSOR");
+		if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
+				&& contact.getFixtureB().isSensor())
+		{
+			 System.out.println("GOAAAAALLLLLL");
+			if(!done)
+			{
+				
+				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+//				((Goal) contactObject).
+				destroy = contactObject;
+				done = true;
+				goalReached = true;
+			}
+		}
+		
 		if (contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Rock.class
 				&& contact.getFixtureB().isSensor())
 		{
@@ -482,20 +497,6 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 					airTime = 35;
 				}
 			}
-		 if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
-				&& contact.getFixtureB().isSensor())
-		{
-			 System.out.println("GOAAAAALLLLLL");
-			if(!done)
-			{
-				
-				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
-//				((Goal) contactObject).
-				destroy = contactObject;
-				done = true;
-				goalReached = true;
-			}
-		}
 	}
 
 	@Override

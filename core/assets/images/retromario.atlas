@@ -4,79 +4,142 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Retro-Mario-icon
+  rotate: false
+  xy: 306, 295
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+Retro-Mario-icon
+  rotate: false
+  xy: 822, 330
+  size: 180, 221
+  orig: 180, 221
+  offset: 0, 0
+  index: 2
+Retro-Mario-icon
+  rotate: false
+  xy: 822, 119
+  size: 155, 209
+  orig: 155, 209
+  offset: 0, 0
+  index: 1
+Retro-Mario-icon
+  rotate: false
+  xy: 153, 2
+  size: 139, 191
+  orig: 139, 191
+  offset: 0, 0
+  index: 3
 anim_gold_coin
   rotate: false
-  xy: 2, 60
+  xy: 2, 14
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 1
 anim_gold_coin
   rotate: false
-  xy: 2, 2
+  xy: 60, 14
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 2
 anim_gold_coin
   rotate: false
-  xy: 60, 60
+  xy: 786, 61
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 3
 anim_gold_coin
   rotate: false
-  xy: 60, 2
+  xy: 844, 61
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 4
 anim_gold_coin
   rotate: false
-  xy: 118, 60
+  xy: 902, 61
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 5
 anim_gold_coin
   rotate: false
-  xy: 118, 2
+  xy: 960, 61
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 6
+badlogic
+  rotate: false
+  xy: 564, 295
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+cloud
+  rotate: false
+  xy: 533, 92
+  size: 251, 201
+  orig: 251, 201
+  offset: 0, 0
+  index: -1
+goal
+  rotate: false
+  xy: 2, 72
+  size: 149, 479
+  orig: 149, 479
+  offset: 0, 0
+  index: -1
 gold_coin
   rotate: false
-  xy: 176, 60
+  xy: 533, 34
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
-leaf
+goomba
   rotate: false
-  xy: 2, 118
-  size: 900, 900
-  orig: 900, 900
+  xy: 306, 68
+  size: 225, 225
+  orig: 225, 225
+  offset: 0, 0
+  index: -1
+mountain_left
+  rotate: false
+  xy: 2, 780
+  size: 1000, 225
+  orig: 1000, 225
+  offset: 0, 0
+  index: -1
+mountain_right
+  rotate: false
+  xy: 2, 553
+  size: 1000, 225
+  orig: 1000, 225
   offset: 0, 0
   index: -1
 rock_edge
   rotate: false
-  xy: 904, 304
+  xy: 241, 195
   size: 63, 356
   orig: 63, 356
   offset: 0, 0
   index: -1
 rock_middle
   rotate: false
-  xy: 904, 662
+  xy: 153, 195
   size: 86, 356
   orig: 86, 356
   offset: 0, 0
   index: -1
 water_overlay
   rotate: false
-  xy: 904, 142
+  xy: 979, 168
   size: 32, 160
   orig: 32, 160
   offset: 0, 0
@@ -87,52 +150,10 @@ size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-Retro-Mario-icon
-  rotate: false
-  xy: 153, 225
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-badlogic
-  rotate: false
-  xy: 411, 225
-  size: 256, 256
-  orig: 256, 256
-  offset: 0, 0
-  index: -1
-cloud
-  rotate: false
-  xy: 153, 22
-  size: 251, 201
-  orig: 251, 201
-  offset: 0, 0
-  index: -1
-goal
+leaf
   rotate: false
   xy: 2, 2
-  size: 149, 479
-  orig: 149, 479
-  offset: 0, 0
-  index: -1
-goomba
-  rotate: false
-  xy: 669, 256
-  size: 225, 225
-  orig: 225, 225
-  offset: 0, 0
-  index: -1
-mountain_left
-  rotate: false
-  xy: 2, 710
-  size: 1000, 225
-  orig: 1000, 225
-  offset: 0, 0
-  index: -1
-mountain_right
-  rotate: false
-  xy: 2, 483
-  size: 1000, 225
-  orig: 1000, 225
+  size: 900, 900
+  orig: 900, 900
   offset: 0, 0
   index: -1

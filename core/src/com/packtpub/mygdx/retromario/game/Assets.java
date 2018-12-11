@@ -151,9 +151,23 @@ public class Assets implements Disposable, AssetErrorListener {
 	 */
 	public class AssetMario {
 		public final AtlasRegion head;
+		public final Animation<TextureRegion> animMario;
 
 		public AssetMario (TextureAtlas atlas) {
 			head = atlas.findRegion("Retro-Mario-icon");
+			
+
+			//Animation: mario
+			Array<AtlasRegion> regions = null;
+		//	atlas.findRegions("mario-anim");
+			AtlasRegion region = null; //regions.first();
+			regions = atlas.findRegions("Retro-Mario-icon");
+			animMario = new Animation<TextureRegion>(1.0f/10.0f, regions, Animation.PlayMode.LOOP_PINGPONG);
+			
+			
+			//			for(int i = 0; i < 10; i++)
+//				regions.insert(0,region);
+//			animMario = new Animation<TextureRegion>(1.0f /20.0f,regions,Animation.PlayMode.LOOP_PINGPONG); //loops animation
 			}
 		}
 	

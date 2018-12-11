@@ -14,10 +14,11 @@ import com.packtpub.mygdx.retromario.game.WorldController;
 public class Goal extends AbstractGameObject {
 	
 	private TextureRegion regGoal; //texture info for goal
-	public Fixture playerPhysicsFixture;
+	//public Fixture playerPhysicsFixture;
 	public FixtureDef playerSensorFixture;
 	
 	public Goal() {
+		super();
 		init();
 	 }
 
@@ -31,7 +32,8 @@ public class Goal extends AbstractGameObject {
 //					bodyDef = new BodyDef();
 					
 					bodyDef = new BodyDef();
-					bodyDef.type = BodyType.StaticBody;
+					bodyDef.type = BodyType.KinematicBody;
+					bodyDef.position.set(origin);
 					Body box = WorldController.b2world.createBody(bodyDef);
 					PolygonShape poly = new PolygonShape();
 					poly.setAsBox(0.4f, 0.4f);
