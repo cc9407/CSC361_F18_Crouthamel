@@ -16,7 +16,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -29,35 +28,76 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import com.packtpub.mygdx.retromario.game.objects.AbstractGameObject;
 import com.packtpub.mygdx.retromario.game.objects.Goal;
 import com.packtpub.mygdx.retromario.game.objects.GoldCoin;
 import com.packtpub.mygdx.retromario.game.objects.Leaf;
-import com.packtpub.mygdx.retromario.game.objects.Mario;
-import com.packtpub.mygdx.retromario.game.objects.Mario.JUMP_STATE;
 import com.packtpub.mygdx.retromario.game.objects.Rock;
 import com.packtpub.mygdx.retromario.screens.MenuScreen;
+import com.packtpub.mygdx.retromario.util.AudioManager;
 import com.packtpub.mygdx.retromario.util.CameraHelper;
 import com.packtpub.mygdx.retromario.util.Constants;
 
 
 public class WorldController extends InputAdapter implements Disposable, ContactListener{
-
+	
+	//instance variables and objects 
 	private static final String TAG = WorldController.class.getName();
 	public LevelOne level;
 	public int lives;
 	public int score;
 	private Game game;
 	public CameraHelper cameraHelper;
-	
+	public AbstractGameObject contactObject;
 	public float livesVisual;
 	public float scoreVisual;
-
-	private Rectangle r1 = new Rectangle();
-	private Rectangle r2 = new Rectangle();
+	public boolean done;
+	public AbstractGameObject destroy;
 	private float timeLeftGameOverDelay;
 	private boolean goalReached; //has the goal been reached?
-	public World b2world;
+	public static World b2world;
+	public boolean grounded = false;
+	public int airTime = 10;
 
+	
+	/**
+	 * Initialize the world controller. Set lives.
+	 * Get a CameraHelper.
+	 */
+	private void init() {
+		b2world = new World(new Vector2(0, -20.0f),true);
+		Gdx.input.setInputProcessor(this);
+		b2world.setContactListener(this);
+		cameraHelper = new CameraHelper();
+		lives = Constants.LIVES_START;
+		livesVisual = lives;
+		timeLeftGameOverDelay = 0;
+		initLevel();
+	}
+	
+	/**
+	 * constructor for world controller
+	 * @param game instance of the game/BunnyMain
+	 */
+	public WorldController(Game game) {
+		this.game = game;
+		init();
+	}
+	
+	/**
+	 * Level initialization method
+	 */
+	private void initLevel() {
+		score = 0;
+		scoreVisual = score;
+	    goalReached = false; //set goal reached to false at each init
+		level = new LevelOne(Constants.LEVEL_01);
+		System.out.println("InitLevel: " + level.mario.body.getPosition() + " : " + level.mario.position);
+		cameraHelper.setTarget(level.mario);
+		initPhysics();
+		System.out.println("InitPhys: " + level.mario.body.getPosition() + " : " + level.mario.position);
+	}
+	
 	/**
 	 * Boolean checker method for if the game has ended
 	 * @return true if lives are < 0
@@ -65,7 +105,15 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	public boolean isGameOver() {
 		return lives < 0;
 	}
+	
+	/*
+	 * returns goal reached variable
+	 */
+	public boolean isGameOverTwo() {
+		return goalReached;
+	}
 
+	
 	/**
 	 * Checks if the player fell off screen
 	 * @return
@@ -80,13 +128,13 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 * dispose of excess to free memory
 	 */
 	private void initPhysics() {
-		if(b2world != null) b2world.dispose(); //destroy if already init
-		b2world = new World(new Vector2(0, -9.81f),true);
+//		if(b2world != null) b2world.dispose(); //destroy if already init
+//		b2world = new World(new Vector2(0, -9.81f),true);
 		//Rocks
 		Vector2 origin = new Vector2();
 		for(Rock rock : level.rocks) { //for each rock
 			BodyDef bodyDef = new BodyDef();
-			bodyDef.type = BodyType.KinematicBody;
+			bodyDef.type = BodyType.StaticBody;
 			bodyDef.position.set(rock.position);
 			 Body body = b2world.createBody(bodyDef);
 			rock.body = body;
@@ -95,46 +143,77 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 			origin.y = rock.bounds.height / 2.0f;
 			polygonShape.setAsBox(rock.bounds.width / 2.0f,
 					rock.bounds.height / 2.0f, origin,0);
+			System.out.println(rock.bounds.height +" "+ rock.bounds.width);
 			FixtureDef fixtureDef = new FixtureDef();
 			fixtureDef.shape = polygonShape;
+			FixtureDef fixtureSensor = new FixtureDef();
+			fixtureSensor.shape = polygonShape;
+			fixtureSensor.isSensor = true;
+			rock.body.createFixture(fixtureDef);
+			rock.body.createFixture(fixtureSensor);
+			polygonShape.dispose();
+			rock.body.setUserData(rock);
+		}
+		//coins
+		for(GoldCoin goldCoins : level.goldcoins) { 
+			BodyDef bodyDef = new BodyDef();
+			bodyDef.type = BodyType.KinematicBody;
+			bodyDef.position.set(goldCoins.position);
+			 Body body = b2world.createBody(bodyDef);
+			goldCoins.body = body;
+			PolygonShape polygonShape = new PolygonShape();
+			origin.x = goldCoins.bounds.width / 2.0f;
+			origin.y = goldCoins.bounds.height / 2.0f;
+			polygonShape.setAsBox(goldCoins.bounds.width / 2.0f,
+					goldCoins.bounds.height / 2.0f, origin,0);
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.shape = polygonShape;
+			fixtureDef.isSensor = true;
+			goldCoins.body.createFixture(fixtureDef);
+			polygonShape.dispose();
+			body.setUserData(goldCoins);
+		}
+		
+		//leaves
+		for(Leaf leaves : level.leaves) { 
+			BodyDef bodyDef = new BodyDef();
+			bodyDef.type = BodyType.KinematicBody;
+			bodyDef.position.set(leaves.position);
+			 Body body = b2world.createBody(bodyDef);
+			leaves.body = body;
+			PolygonShape polygonShape = new PolygonShape();
+			origin.x = leaves.bounds.width / 2.0f;
+			origin.y = leaves.bounds.height / 2.0f;
+			polygonShape.setAsBox(leaves.bounds.width / 2.0f,
+					leaves.bounds.height / 2.0f, origin,0);
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.shape = polygonShape;
+			fixtureDef.isSensor = true;
 			body.createFixture(fixtureDef);
 			polygonShape.dispose();
-		}
-	}
-	
-	/**
-	 * Level initialization method
-	 */
-	private void initLevel() {
-		score = 0;
-		scoreVisual = score;
-	    goalReached = false; //set goal reached to false at each init
-		level = new LevelOne(Constants.LEVEL_01);
-		cameraHelper.setTarget(level.mario);
-		initPhysics();
-	}
-
-	/**
-	 * constructor for world controller
-	 * @param game instance of the game/BunnyMain
-	 */
-	public WorldController(Game game) {
-		this.game = game;
-		init();
-	}
-
-	/**
-	 * Initialize the world controller. Set lives.
-	 * Get a CameraHelper.
-	 */
-	private void init() {
-		Gdx.input.setInputProcessor(this);
-		b2world.setContactListener(this);
-		cameraHelper = new CameraHelper();
-		lives = Constants.LIVES_START;
-		livesVisual = lives;
-		timeLeftGameOverDelay = 0;
-		initLevel();
+			body.setUserData(leaves);
+			}
+		
+//		BodyDef bodyDef = new BodyDef();
+//		bodyDef.type = BodyType.StaticBody;
+//		bodyDef.position.set(level.goal.position);
+//		 Body body = b2world.createBody(bodyDef);
+//		level.goal.body = body;
+//		PolygonShape polygonShape = new PolygonShape();
+//		origin.x = level.goal.bounds.width / 2.0f;
+//		origin.y = level.goal.bounds.height / 2.0f;
+//		polygonShape.setAsBox(level.goal.bounds.width / 2.0f,
+//				level.goal.bounds.height / 2.0f, origin,0);
+//		System.out.println(level.goal.bounds.height +" "+ level.goal.bounds.width);
+//		FixtureDef fixtureDef = new FixtureDef();
+//		fixtureDef.shape = polygonShape;
+//		FixtureDef fixtureSensor = new FixtureDef();
+//		fixtureSensor.shape = polygonShape;
+//		fixtureSensor.isSensor = true;
+//		level.goal.body.createFixture(fixtureDef);
+//		level.goal.body.createFixture(fixtureSensor);
+//		polygonShape.dispose();
+//		level.goal.body.setUserData(level.goal);
 	}
 
 	/**
@@ -164,6 +243,15 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 * @param deltaTime the game time
 	 */
 	public void update(float deltaTime) {
+		b2world.step(Gdx.graphics.getDeltaTime(), 4, 4);
+		
+		//System.out.println(level.mario.body.getPosition() + " : " + level.mario.position);
+		
+		if(destroy != null)
+		{
+			b2world.destroyBody(destroy.body);
+			destroy = null;
+		}
 		handleDebugInput(deltaTime);
 		if (isGameOver()) {
 			timeLeftGameOverDelay -= deltaTime;
@@ -175,6 +263,7 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		level.update(deltaTime);
 		cameraHelper.update(deltaTime);
 		if (!isGameOver() && isPlayerInWater()) {
+			AudioManager.instance.play(Assets.instance.sounds.liveLost);
 			lives--;
 			if (isGameOver())
 				timeLeftGameOverDelay = Constants.TIME_DELAY_GAME_OVER;
@@ -273,7 +362,45 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 	 * @param deltaTime game time
 	 */
 	private void handleInputGame(float deltaTime) {
-		if (cameraHelper.hasTarget(level.mario)) {
+		Vector2 velocity = new Vector2(0,0);
+		Vector2 pos = level.mario.body.getPosition();
+		if(Gdx.input.isKeyPressed(Keys.RIGHT))
+		{
+			velocity.x += 6;
+		}
+			else if(Gdx.input.isKeyPressed(Keys.LEFT)) 
+			{
+				velocity.x -= 6;
+			}
+		
+		if(Gdx.input.isKeyPressed(Keys.SPACE) && grounded == true && airTime-- > 0)
+		{
+			System.out.println("JUMPING");
+			System.out.println("AirTime: " + airTime);
+			//grounded = false;
+//			velocity.y += 30;
+			level.mario.body.setLinearVelocity(0,velocity.y += 10);
+			
+			if(level.mario.hasLeafPowerup)
+			{
+				AudioManager.instance.play(Assets.instance.sounds.jumpWithLeaf);
+			}
+			else {
+				AudioManager.instance.play(Assets.instance.sounds.jump);
+			}
+			//level.mario.body.setLinearVelocity(velocity.x,0);
+			//level.mario.body.setTransform(pos.x,pos.y + 0.01f, 0);
+			//level.mario.body.applyLinearImpulse(0 , 10, pos.x, pos.y, true);
+		}
+		
+//		if(!grounded)
+//		{
+			velocity.y -= 4.0f;
+//		}
+			
+		level.mario.body.setLinearVelocity(velocity);
+		
+		/*if (cameraHelper.hasTarget(level.mario)) {
 			// player movement
 			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
 				level.mario.velocity.x = -level.mario.terminalVelocity.x;
@@ -290,8 +417,8 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 				level.mario.setJumping(true);
 			} else {
 				level.mario.setJumping(false);
-			}
-		}
+			}*/
+		
 	}
 
 	/**
@@ -312,15 +439,91 @@ public class WorldController extends InputAdapter implements Disposable, Contact
 		
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.badlogic.gdx.physics.box2d.ContactListener#beginContact(com.badlogic.gdx.physics.box2d.Contact)
+	 */
 	@Override
 	public void beginContact(Contact contact) {
+		//System.out.println("SENSOR");
+		if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Goal.class
+				&& contact.getFixtureB().isSensor())
+		{
+			 System.out.println("GOAAAAALLLLLL");
+			if(!done)
+			{
+				
+				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+//				((Goal) contactObject).
+				destroy = contactObject;
+				done = true;
+				goalReached = true;
+			}
+		}
 		
+		if (contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Rock.class
+				&& contact.getFixtureB().isSensor())
+		{
+			//if(!done)
+			//{
+				grounded = true;
+				if(!level.mario.hasLeafPowerup)
+				{
+					airTime = 20;
+				} else {
+					airTime = 35;
+				}
+			//	done = true;
+			//}
+		}
 		
+		if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == GoldCoin.class 
+				&& contact.getFixtureB().isSensor())
+		{
+			if(!done)
+			{
+				contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+				((GoldCoin) contactObject).collected = true; 
+				destroy = contactObject;
+				done = true;
+				score += ((GoldCoin) contactObject).getScore();
+				AudioManager.instance.play(Assets.instance.sounds.pickupCoin);
+			}
+		}
+		else if(contact.getFixtureB().getBody().getUserData() == level.mario && contact.getFixtureA().getBody().getUserData() == AbstractGameObject.class)
+		{
+			contactObject = (AbstractGameObject) contact.getFixtureA().getBody().getUserData();
+		}
+			else if(contact.getFixtureA().getBody().getUserData() == level.mario && contact.getFixtureB().getBody().getUserData().getClass() == Leaf.class
+					&& contact.getFixtureB().isSensor())
+			{
+				if(!done)
+				{
+					contactObject = (AbstractGameObject) contact.getFixtureB().getBody().getUserData();
+					((Leaf) contactObject).collected = true;
+					destroy = contactObject;
+					done = true;
+					
+					level.mario.setLeafPowerup(true);
+					airTime = 35;
+					AudioManager.instance.play(Assets.instance.sounds.pickupLeaf);
+				}
+			}
 	}
 
 	@Override
 	public void endContact(Contact contact) {
-		// TODO Auto-generated method stub
+		if(contact.getFixtureA().getBody().getUserData() == contactObject)
+		{
+			done = false;
+			contactObject = null;
+			//grounded = false;
+		}
+			else if(contact.getFixtureB().getBody().getUserData() == contactObject)
+			{
+				done = false;
+				contactObject = null;
+			}
 		
 	}
 

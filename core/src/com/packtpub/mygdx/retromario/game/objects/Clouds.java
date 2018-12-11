@@ -26,7 +26,7 @@ public class Clouds extends AbstractGameObject
 	public void render(SpriteBatch batch) {
 		TextureRegion reg = regCloud;
 		batch.draw(reg.getTexture(), position.x + origin.x,
-				position.y + origin.y, origin.x, origin.y, dimension.x,
+				position.y + origin.y+5, origin.x, origin.y, dimension.x,
 				dimension.y, scale.x, scale.y, rotation, reg.getRegionX(),
 				reg.getRegionY(), reg.getRegionWidth(), reg.getRegionHeight(),
 				false, false);

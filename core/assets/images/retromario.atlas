@@ -6,77 +6,91 @@ filter: Nearest,Nearest
 repeat: none
 anim_gold_coin
   rotate: false
-  xy: 2, 60
+  xy: 95, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 1
 anim_gold_coin
   rotate: false
-  xy: 2, 2
+  xy: 153, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 2
 anim_gold_coin
   rotate: false
-  xy: 60, 60
+  xy: 211, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 3
 anim_gold_coin
   rotate: false
-  xy: 60, 2
+  xy: 269, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 4
 anim_gold_coin
   rotate: false
-  xy: 118, 60
+  xy: 327, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 5
 anim_gold_coin
   rotate: false
-  xy: 118, 2
+  xy: 385, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: 6
 gold_coin
   rotate: false
-  xy: 176, 60
+  xy: 443, 46
   size: 56, 56
   orig: 56, 56
   offset: 0, 0
   index: -1
 leaf
   rotate: false
-  xy: 2, 118
+  xy: 2, 104
   size: 900, 900
   orig: 900, 900
   offset: 0, 0
   index: -1
+mountain_left
+  rotate: false
+  xy: 904, 2
+  size: 105, 124
+  orig: 105, 124
+  offset: 0, 0
+  index: -1
+mountain_right
+  rotate: false
+  xy: 2, 12
+  size: 91, 90
+  orig: 91, 90
+  offset: 0, 0
+  index: -1
 rock_edge
   rotate: false
-  xy: 904, 304
+  xy: 904, 290
   size: 63, 356
   orig: 63, 356
   offset: 0, 0
   index: -1
 rock_middle
   rotate: false
-  xy: 904, 662
+  xy: 904, 648
   size: 86, 356
   orig: 86, 356
   offset: 0, 0
   index: -1
 water_overlay
   rotate: false
-  xy: 904, 142
+  xy: 904, 128
   size: 32, 160
   orig: 32, 160
   offset: 0, 0
@@ -89,50 +103,57 @@ filter: Nearest,Nearest
 repeat: none
 Retro-Mario-icon
   rotate: false
-  xy: 153, 225
+  xy: 754, 213
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
+Retro-Mario-icon
+  rotate: false
+  xy: 487, 77
+  size: 180, 221
+  orig: 180, 221
+  offset: 0, 0
+  index: 2
+Retro-Mario-icon
+  rotate: false
+  xy: 669, 2
+  size: 155, 209
+  orig: 155, 209
+  offset: 0, 0
+  index: 1
+Retro-Mario-icon
+  rotate: false
+  xy: 826, 20
+  size: 139, 191
+  orig: 139, 191
+  offset: 0, 0
+  index: 3
 badlogic
   rotate: false
-  xy: 411, 225
+  xy: 2, 42
   size: 256, 256
   orig: 256, 256
   offset: 0, 0
   index: -1
 cloud
   rotate: false
-  xy: 153, 22
-  size: 251, 201
-  orig: 251, 201
+  xy: 2, 300
+  size: 750, 650
+  orig: 750, 650
   offset: 0, 0
   index: -1
 goal
   rotate: false
-  xy: 2, 2
+  xy: 754, 471
   size: 149, 479
   orig: 149, 479
   offset: 0, 0
   index: -1
 goomba
   rotate: false
-  xy: 669, 256
+  xy: 260, 73
   size: 225, 225
   orig: 225, 225
-  offset: 0, 0
-  index: -1
-mountain_left
-  rotate: false
-  xy: 2, 710
-  size: 1000, 225
-  orig: 1000, 225
-  offset: 0, 0
-  index: -1
-mountain_right
-  rotate: false
-  xy: 2, 483
-  size: 1000, 225
-  orig: 1000, 225
   offset: 0, 0
   index: -1
